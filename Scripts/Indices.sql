@@ -36,6 +36,9 @@ WHERE OBJECT_NAME(object_id) = 'HeapTable'
 SELECT * FROM sys.indexes
 WHERE OBJECT_NAME(object_id) = 'ClusteredTable'
 
+SELECT * FROM HeapTable
+SELECT * FROM ClusteredTable
+
 SET STATISTICS IO ON
 
 INSERT INTO HeapTable
