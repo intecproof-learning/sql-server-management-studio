@@ -70,3 +70,43 @@ INNER JOIN AdventureWorks2019
 ON sod.ProductID = p.ProductID
 
 SET STATISTICS IO OFF
+
+SELECT
+	[name] AS Index_Name,
+	[type_desc] AS Index_Type,
+	[is_unique],
+	OBJECT_NAME(object_id) As Table_Name
+FROM sys.indexes
+WHERE object_id = OBJECT_ID('HeapTable')
+
+SELECT
+	[name] AS Index_Name,
+	[type_desc] AS Index_Type,
+	[is_unique],
+	OBJECT_NAME(object_id) As Table_Name
+FROM sys.indexes
+WHERE object_id = OBJECT_ID('ClusteredTable')
+
+SELECT
+a.[name] AS Index_Name,
+OBJECT_NAME(a.object_id) AS Table_Name,
+COL_NAME(b.object_id, b.column_id) AS  Column_Name,
+b.index_column_id,
+b.key_ordinal,
+b.is_included_column
+FROM sys.indexes AS a INNER JOIN 
+	sys.index_columns As b
+ON
+	a.object_id = b.object_id AND
+	a.index_id = b.index_id
+WHERE
+	a.object_id = OBJECT_ID('HeapTable') OR
+	a.object_id = OBJECT_ID('ClusteredTable')
+
+EXEC sp_helpindex 'dbo.HeapTable'
+GO
+EXEC sp_helpindex 'dbo.ClusteredTable'
+GO
+
+SELECT * FROM HeapTable
+
