@@ -220,3 +220,126 @@ WHERE clusteredTableID = 314598 OR clusteredTableID = 972874
 
 SET STATISTICS TIME OFF
 SET STATISTICS IO OFF
+
+SELECT
+productName,
+productNumber,
+orderQty
+FROM HeapTable 
+WHERE carrierTrackingNumber = '4911-403C-98'
+AND unitPrice > 2000
+AND unitPriceDiscount = 0
+AND productNumber = 'asdasdasd'
+
+CREATE NONCLUSTERED INDEX
+[NIX_HeapTable(carrierTrackingNumber,
+unitPriceDiscount, unitPrice)]
+
+ON [dbo].[HeapTable] ([carrierTrackingNumber],
+[unitPriceDiscount],[unitPrice])
+
+INCLUDE ([productName],[productNumber],[orderQty])
+
+CREATE NONCLUSTERED INDEX
+[NIX_ClusteredTable(carrierTrackingNumber,
+unitPriceDiscount, unitPrice)]
+
+ON [dbo].[ClusteredTable] ([carrierTrackingNumber],
+[unitPriceDiscount],[unitPrice])
+
+
+SET STATISTICS IO ON
+SET STATISTICS TIME ON
+
+SELECT
+*
+FROM HeapTable 
+WHERE carrierTrackingNumber = '4911-403C-98'
+AND unitPrice > 2000
+AND unitPriceDiscount = 0
+
+SELECT
+*
+FROM ClusteredTable 
+WHERE carrierTrackingNumber = '4911-403C-98'
+AND unitPrice > 2000
+AND unitPriceDiscount = 0
+
+SET STATISTICS IO OFF
+SET STATISTICS TIME OFF
+
+UPDATE HeapTable
+SET productNumber = 'asdadasdds'
+WHERE heapTableID = 123
+
+UPDATE HeapTable
+SET productNumber = 'asdadasdds'
+FROM HeapTable
+WHERE heapTableID = 123
+
+UPDATE hp1
+SET productNumber = 'asdadasdds'
+FROM HeapTable AS hp1
+WHERE hp1.heapTableID = 123
+
+SET STATISTICS IO ON
+SET STATISTICS TIME ON
+
+UPDATE HeapTable
+SET productName = 'Producto modificado'
+WHERE heapTableID = 123
+
+UPDATE ClusteredTable
+SET productName = 'Producto modificado'
+WHERE clusteredTableID = 123
+
+SET STATISTICS IO OFF
+SET STATISTICS TIME OFF
+
+SET STATISTICS IO ON
+SET STATISTICS TIME ON
+UPDATE HeapTable
+SET productName = 'Producto modificado'
+WHERE heapTableID > 123 AND heapTableID < 987900
+
+UPDATE ClusteredTable
+SET productName = 'Producto modificado'
+WHERE clusteredTableID > 123 AND clusteredTableID < 987900
+SET STATISTICS IO OFF
+SET STATISTICS TIME OFF
+
+SET STATISTICS IO ON
+SET STATISTICS TIME ON
+DELETE HeapTable
+WHERE heapTableID = 123
+
+DELETE ClusteredTable
+WHERE clusteredTableID = 123
+SET STATISTICS IO OFF
+SET STATISTICS TIME OFF
+
+SET STATISTICS IO ON
+SET STATISTICS TIME ON
+DELETE HeapTable
+WHERE heapTableID > 123 AND heapTableID < 987900
+
+DELETE ClusteredTable
+WHERE clusteredTableID > 123 AND clusteredTableID < 987900
+SET STATISTICS IO OFF
+SET STATISTICS TIME OFF
+SET STATISTICS IO ON
+SET STATISTICS TIME ON
+DELETE HeapTable
+WHERE productName = 'Mountain-100 Black, 42'
+
+DELETE ClusteredTable
+WHERE productName = 'Mountain-100 Black, 42'
+SET STATISTICS IO OFF
+SET STATISTICS TIME OFF
+
+SELECT * FROM HeapTable
+
+UPDATE hp1
+SET hp1.productNumber = hp2.productNumber
+FROM HeapTable AS hp1, HeapTable AS hp2
+WHERE hp1.heapTableID = 123
