@@ -187,9 +187,32 @@ OPEN EmpData
 FETCH NEXT FROM EmpData INTO @id, @nombre
 WHILE @@fetch_status = 0
 BEGIN
-	SELECT @id, @nombre
+	/*SELECT @id, @nombre
 	PRINT 'ID del empleado: ' + CAST(@id AS nvarchar(10))
-	+ ' - Nombre del empleado: ' + @nombre
+	+ ' - Nombre del empleado: ' + @nombre*/
+
+	/*SELECT
+	@nombre AS Manager, nombre, departamento
+	FROM Empleado WHERE idManager = @id*/
+
+	SET NOCOUNT ON
+	PRINT 'Manager: ' + @nombre
+
+	DECLARE @nombreSub nvarchar(50)
+	DECLARE EmpDataSub CURSOR FOR SELECT nombre FROM Empleado WHERE idManager = @id
+	OPEN EmpDataSub
+	FETCH NEXT FROM EmpDataSub INTO @nombreSub
+
+	IF @@fetch_status != 0
+			PRINT '   No hey gente a su cargo'
+	WHILE @@fetch_status = 0
+	BEGIN
+		PRINT '   ' + @nombreSub
+		FETCH NEXT FROM EmpDataSub INTO @nombreSub
+	END
+	CLOSE EmpDataSub
+	DEALLOCATE EmpDataSub
+	SET NOCOUNT OFF
 
 	FETCH NEXT FROM EmpData INTO @id, @nombre
 END
