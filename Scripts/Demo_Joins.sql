@@ -170,3 +170,23 @@ DELETE Conjunto_A WHERE conjunto_AID = 26
 
 ALTER TABLE Conjunto_B
 ALTER COLUMN conjunto_AID int NOT NULL
+
+SELECT * FROM Empleado
+SELECT * FROM Empleado AS e1 INNER JOIN Empleado AS e2
+ON e1.id = e2.idManager
+SELECT * FROM Empleado AS e1 LEFT JOIN Empleado AS e2
+ON e1.id = e2.idManager
+
+--Cursores
+--CTEs = Common Table Expressions
+
+DECLARE @id int
+DECLARE EmpData CURSOR FOR SELECT id FROM Empleado
+OPEN EmpData
+FETCH NEXT FROM EmpData INTO @id
+WHILE @@fetch_status = 0
+BEGIN
+	SELECT 'Algo'
+END
+CLOSE EmpData
+DEALLOCATE EmpData
