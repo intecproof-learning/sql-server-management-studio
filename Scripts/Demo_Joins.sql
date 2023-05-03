@@ -218,3 +218,67 @@ BEGIN
 END
 CLOSE EmpData
 DEALLOCATE EmpData
+
+SET NOCOUNT ON
+DECLARE @orderID nvarchar(50)
+DECLARE @orderDate nvarchar(50)
+DECLARE @customerName nvarchar(50)
+DECLARE SalesHeader CURSOR FOR
+	SELECT
+		soh.SalesOrderID,
+		soh.OrderDate,
+		CONCAT(pp.FirstName , ' ', pp.LastName) AS CustomerName
+	FROM
+		Sales.SalesOrderHeader AS soh
+		INNER JOIN Sales.Customer AS sc
+		ON soh.CustomerID = sc.CustomerID
+		INNER JOIN Person.Person AS pp
+		On sc.PersonID = pp.BusinessEntityID
+	WHERE pp.BusinessEntityID = 6387
+OPEN SalesHeader
+	FETCH NEXT FROM SalesHeader
+	INTO @orderID, @orderDate, @customerName
+
+	IF @@fetch_status = 0
+		PRINT 'Cliente: ' + @customerName
+
+	WHILE @@fetch_status = 0
+	BEGIN
+		PRINT '   Número de pedido: ' + CAST(@orderID AS nvarchar(20))
+		PRINT '   Fecha del pedido: ' + CAST(@orderDate AS nvarchar(20))
+
+		DECLARE @productID int
+		DECLARE @productNumber nvarchar(50)
+		DECLARE @quantity smallint
+		DECLARE SalesDetail CURSOR FOR
+			SELECT
+				pp.ProductNumber, pp.ProductID, ssod.OrderQty
+			FROM
+				Sales.SalesOrderDetail AS ssod
+				INNER JOIN Production.Product AS pp
+				ON ssod.ProductID = pp.ProductID
+			WHERE
+				SalesOrderID = @orderID
+		OPEN SalesDetail
+			FETCH NEXT FROM SalesDetail
+			INTO @productNumber, @productID, @quantity
+
+			WHILE @@fetch_status = 0
+			BEGIN
+				PRINT '      Producto: ' + @productNumber
+				PRINT '      Cantidad vendida: ' + CAST(@quantity AS nvarchar(10))
+
+				FETCH NEXT FROM SalesDetail
+				INTO @productNumber, @productID, @quantity
+			END
+		CLOSE SalesDetail
+		DEALLOCATE SalesDetail
+
+		PRINT ''
+		PRINT ''
+		FETCH NEXT FROM SalesHeader
+		INTO @orderID, @orderDate, @customerName
+	END
+CLOSE SalesHeader
+DEALLOCATE SalesHeader
+SET NOCOUNT OFF
