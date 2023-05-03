@@ -181,12 +181,17 @@ ON e1.id = e2.idManager
 --CTEs = Common Table Expressions
 
 DECLARE @id int
-DECLARE EmpData CURSOR FOR SELECT id FROM Empleado
+DECLARE @nombre nvarchar(50)
+DECLARE EmpData CURSOR FOR SELECT id, nombre FROM Empleado
 OPEN EmpData
-FETCH NEXT FROM EmpData INTO @id
+FETCH NEXT FROM EmpData INTO @id, @nombre
 WHILE @@fetch_status = 0
 BEGIN
-	SELECT 'Algo'
+	SELECT @id, @nombre
+	PRINT 'ID del empleado: ' + CAST(@id AS nvarchar(10))
+	+ ' - Nombre del empleado: ' + @nombre
+
+	FETCH NEXT FROM EmpData INTO @id, @nombre
 END
 CLOSE EmpData
 DEALLOCATE EmpData
