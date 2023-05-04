@@ -282,3 +282,124 @@ OPEN SalesHeader
 CLOSE SalesHeader
 DEALLOCATE SalesHeader
 SET NOCOUNT OFF
+
+SET NOCOUNT ON
+DECLARE @orderID nvarchar(50)
+DECLARE @orderDate nvarchar(50)
+DECLARE @customerName nvarchar(50)
+DECLARE SalesHeader CURSOR FOR
+	SELECT
+		soh.SalesOrderID,
+		soh.OrderDate,
+		CONCAT(pp.FirstName , ' ', pp.LastName) AS CustomerName
+	FROM
+		Sales.SalesOrderHeader AS soh
+		INNER JOIN Sales.Customer AS sc
+		ON soh.CustomerID = sc.CustomerID
+		INNER JOIN Person.Person AS pp
+		On sc.PersonID = pp.BusinessEntityID
+	WHERE pp.BusinessEntityID = 6387
+OPEN SalesHeader
+	FETCH NEXT FROM SalesHeader
+	INTO @orderID, @orderDate, @customerName
+
+	IF @@fetch_status = 0
+		PRINT 'Cliente: ' + @customerName
+
+	WHILE @@fetch_status = 0
+	BEGIN
+		PRINT '   Número de pedido: ' + CAST(@orderID AS nvarchar(20))
+		PRINT '   Fecha del pedido: ' + CAST(@orderDate AS nvarchar(20))
+
+		DECLARE @productCategoryID int
+		DECLARE @productSubCategoryID int
+		DECLARE @subCatQty int
+		DECLARE ProductCategories CURSOR FOR
+			SELECT
+				ppc.ProductCategoryID,
+				pps.ProductSubcategoryID,
+				SUM(ssod.OrderQty) AS SubCategoryQty
+			FROM
+				Sales.SalesOrderDetail AS ssod
+				INNER JOIN  Production.Product AS pp
+					ON ssod.ProductID = pp.ProductID
+				INNER JOIN Production.ProductSubcategory AS pps
+					ON pp.ProductSubcategoryID = pps.ProductSubcategoryID
+				INNER JOIN Production.ProductCategory AS ppc
+					ON pps.ProductCategoryID = ppc.ProductCategoryID
+			WHERE
+				ssod.SalesOrderID = @orderID
+			GROUP BY ppc.ProductCategoryID, pps.ProductSubcategoryID
+		OPEN ProductCategories
+			FETCH NEXT FROM ProductCategories
+			INTO @productCategoryID, @productSubCategoryID, @subCatQty
+
+			IF @@fetch_status = 0
+			BEGIN
+				DECLARE @categoryName nvarchar(50) = (SELECT [Name] FROM Production.ProductCategory WHERE ProductCategoryID = @productCategoryID)
+				DECLARE @categoryQty int = 
+				(SELECT
+					SUM(ssod.OrderQty) AS SubCategoryQty
+				FROM
+					Sales.SalesOrderDetail AS ssod
+					INNER JOIN  Production.Product AS pp
+						ON ssod.ProductID = pp.ProductID
+					INNER JOIN Production.ProductSubcategory AS pps
+						ON pp.ProductSubcategoryID = pps.ProductSubcategoryID
+					INNER JOIN Production.ProductCategory AS ppc
+						ON pps.ProductCategoryID = ppc.ProductCategoryID
+				WHERE
+					ssod.SalesOrderID = @orderID AND
+					ppc.ProductCategoryID = @productCategoryID
+				GROUP BY ppc.ProductCategoryID)
+				PRINT '      Categoría: ' + @categoryName + ' | Total vendido: ' + CAST(@categoryQty AS nvarchar(20))
+			END
+
+			WHILE @@fetch_status = 0
+			BEGIN
+				DECLARE @subCategoryName nvarchar(50) = (SELECT [Name] FROM Production.ProductSubcategory WHERE ProductSubcategoryID = @productSubCategoryID)
+				PRINT '         Sub Categoría: ' + @subCategoryName + ' | Total vendido: ' + CAST(@subCatQty AS nvarchar(20))
+
+				DECLARE @productID int
+				DECLARE @productNumber nvarchar(50)
+				DECLARE @quantity smallint
+				DECLARE SalesDetail CURSOR FOR
+					SELECT
+						pp.ProductNumber, pp.ProductID, ssod.OrderQty
+					FROM
+						Sales.SalesOrderDetail AS ssod
+						INNER JOIN Production.Product AS pp
+						ON ssod.ProductID = pp.ProductID
+					WHERE
+						SalesOrderID = @orderID AND
+						pp.ProductSubcategoryID = @productSubCategoryID
+						
+				OPEN SalesDetail
+					FETCH NEXT FROM SalesDetail
+					INTO @productNumber, @productID, @quantity
+
+					WHILE @@fetch_status = 0
+					BEGIN
+						PRINT '            Producto: ' + @productNumber + ' - ' + CAST(@productID AS nvarchar(20)) +
+						' | Cantidad vendida: ' + CAST(@quantity AS nvarchar(10))
+
+						FETCH NEXT FROM SalesDetail
+						INTO @productNumber, @productID, @quantity
+					END
+				CLOSE SalesDetail
+				DEALLOCATE SalesDetail
+
+				FETCH NEXT FROM ProductCategories
+				INTO @productCategoryID, @productSubCategoryID, @subCatQty
+			END
+		CLOSE ProductCategories
+		DEALLOCATE ProductCategories
+
+		PRINT ''
+		PRINT ''
+		FETCH NEXT FROM SalesHeader
+		INTO @orderID, @orderDate, @customerName
+	END
+CLOSE SalesHeader
+DEALLOCATE SalesHeader
+SET NOCOUNT OFF
