@@ -403,3 +403,28 @@ OPEN SalesHeader
 CLOSE SalesHeader
 DEALLOCATE SalesHeader
 SET NOCOUNT OFF
+
+------------------------CTEs------------------------------------
+SELECT id, nombre, idManager FROM Empleado
+
+;WITH EmpData_CTE (x, y)
+AS
+(
+	SELECT id, nombre FROM Empleado
+)
+
+SELECT * FROM EmpData_CTE
+
+;WITH EmpData_CTE (id, nombre, manager)
+AS
+(
+	SELECT id, nombre, CAST('El Patrón' AS nvarchar(50))
+	FROM Empleado WHERE idManager IS NULL
+	UNION ALL
+	SELECT
+		emp.id, emp.nombre, cte.nombre
+	FROM Empleado AS emp INNER JOIN EmpData_CTE AS cte
+	ON emp.idManager = cte.id
+)
+
+SELECT * FROM EmpData_CTE
