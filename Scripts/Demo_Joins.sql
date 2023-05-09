@@ -516,3 +516,256 @@ FROM
 	SELECT * FROM @var_table
 	SELECT * FROM @var_table
 	SELECT * FROM @var_table
+
+
+-------------------------Procedimientos almacenados
+CREATE PROC dbo.usp_GetProductsByName
+(@productNumber nvarchar(50))
+AS
+	SELECT * FROM Production.Product
+	WHERE ProductNumber = @productNumber
+GO
+
+--'AR-5381' -> varchar
+--N'AR-5381' -> nvarchar
+EXEC dbo.usp_GetProductsByName 'AR-5381'
+
+--Error porque el parámetro es requerido
+EXEC dbo.usp_GetProductsByName
+
+--No marca error pero debo considerar el recibir null en el parámetro
+EXEC dbo.usp_GetProductsByName NULL
+
+--Puedes indicas de manera explícita el nombre del parámetro
+EXEC dbo.usp_GetProductsByName
+@productNumber = 'AR-5381'
+GO
+
+CREATE PROC dbo.usp_GetProductsByName_V2
+(@productNumber nvarchar(50) = 'AR-5381')
+AS
+	SELECT * FROM Production.Product
+	WHERE ProductNumber = @productNumber
+GO
+EXEC dbo.usp_GetProductsByName_V2
+EXEC dbo.usp_GetProductsByName_V2 'BA-8327'
+EXEC dbo.usp_GetProductsByName_V2 NULL
+
+
+CREATE PROC dbo.usp_GetProductsByName_V3
+(@productNumber nvarchar(50) = 'AR-5381', @productID int OUT)
+AS
+	SELECT * FROM Production.Product
+	WHERE ProductNumber = @productNumber
+
+	SET @productID = -1
+GO
+
+EXEC dbo.usp_GetProductsByName_V3 --Marca error
+
+DECLARE @resultID int = 0
+EXEC dbo.usp_GetProductsByName_V3 @productID = @resultID OUT
+SELECT @resultID
+
+DECLARE @resultID int = 0
+EXEC dbo.usp_GetProductsByName_V3 'BA-8327', @resultID OUT
+SELECT @resultID
+
+DECLARE @resultID int = 0
+EXEC dbo.usp_GetProductsByName_V3
+@productNumber = 'BA-8327',
+@productID = @resultID OUT
+SELECT @resultID
+
+ALTER PROCEDURE dbo.usp_GetSalesByClientReport
+(@personID int)
+AS
+	IF @personID IS NOT NULL AND (SELECT COUNT(*) FROM Person.Person WHERE BusinessEntityID = @personID) = 0
+	BEGIN
+		PRINT 'El cliente proporcionado no existe'
+		RETURN
+	END
+	IF @personID IS NOT NULL AND (SELECT COUNT(*) FROM Sales.SalesOrderHeader AS soh JOIN Sales.Customer AS sc ON soh.CustomerID = sc.CustomerID JOIN Person.Person AS pp On sc.PersonID = pp.BusinessEntityID WHERE pp.BusinessEntityID = @personID) = 0
+	BEGIN
+		PRINT 'El cliente proporcionado no tiene ventas'
+		RETURN
+	END
+
+	DECLARE @var_table TABLE
+	(
+		orderID int NOT NULL,
+		customerName nvarchar(150) NOT NULL,
+		orderDate datetime NOT NULL,
+		pcName nvarchar(50) NOT NULL,
+		pscName nvarchar(50) NOT NULL,
+		subcategoryQty int NOT NULL,
+		productID nvarchar(50) NOT NULL,
+		productNumber nvarchar(50) NOT NULL,
+		qty int NOT NULL
+	)
+	
+	;WITH SalesHeader_CTE (orderID, orderDate, customerName)
+	AS
+	(
+		SELECT
+			soh.SalesOrderID,
+			soh.OrderDate,
+			CONCAT(pp.FirstName , ' ', pp.LastName) AS CustomerName
+		FROM
+			Sales.SalesOrderHeader AS soh
+			INNER JOIN Sales.Customer AS sc
+			ON soh.CustomerID = sc.CustomerID
+			INNER JOIN Person.Person AS pp
+			On sc.PersonID = pp.BusinessEntityID
+		WHERE
+		pp.BusinessEntityID = @personID OR
+		1 = CASE WHEN @personID IS NULL THEN 1 ELSE 0 END
+	),
+	ProductCategories_CTE (productCategoryID, productSubcategoryID,
+	SubCategoryQty, orderID)
+	AS
+	(
+		SELECT
+			ppc.ProductCategoryID,
+			pps.ProductSubcategoryID,
+			SUM(ssod.OrderQty) AS SubCategoryQty,
+			shc.orderID
+		FROM
+			Sales.SalesOrderDetail AS ssod
+			INNER JOIN  Production.Product AS pp
+				ON ssod.ProductID = pp.ProductID
+			INNER JOIN Production.ProductSubcategory AS pps
+				ON pp.ProductSubcategoryID = pps.ProductSubcategoryID
+			INNER JOIN Production.ProductCategory AS ppc
+				ON pps.ProductCategoryID = ppc.ProductCategoryID
+			INNER JOIN SalesHeader_CTE AS shc
+			ON ssod.SalesOrderID = shc.orderID
+		GROUP BY ppc.ProductCategoryID,
+		pps.ProductSubcategoryID, shc.orderID
+	),
+	SalesDetail_CTE (orderID,
+	productCategoryID, productSubcategoryID, SubCategoryQty,
+	productID, productNumber, quantity)
+	AS
+	(
+		SELECT
+			pcc.orderID,
+			pcc.productCategoryID, pcc.productSubcategoryID, pcc.SubCategoryQty,
+			pp.ProductNumber, pp.ProductID, ssod.OrderQty
+		FROM
+			Sales.SalesOrderDetail AS ssod
+			INNER JOIN Production.Product AS pp
+			ON ssod.ProductID = pp.ProductID
+			INNER JOIN ProductCategories_CTE AS pcc
+			ON pp.ProductSubcategoryID = pcc.productSubcategoryID AND
+			ssod.SalesOrderID = pcc.orderID
+	)
+	
+	INSERT INTO @var_table
+	SELECT
+	shc.orderID, shc.customerName, shc.orderDate,
+	(SELECT [Name] FROM Production.ProductCategory
+	WHERE ProductCategoryID = sdc.productCategoryID),
+	(SELECT [Name] FROM Production.ProductSubcategory
+	WHERE ProductSubcategoryID = sdc.productSubcategoryID),
+	sdc.SubCategoryQty,
+	sdc.productID, sdc.productNumber, sdc.quantity
+	FROM
+		SalesDetail_CTE AS sdc INNER JOIN SalesHeader_CTE AS shc
+		ON sdc.orderID = shc.orderID
+	
+	SELECT * FROM @var_table
+
+	--0	Successful execution.
+	--1	Required parameter value is not specified.
+	--2	Specified parameter value is not valid.
+	--3	Error has occurred getting value.
+	--4 Se encontraron coincidencias nulas.
+	RETURN 0
+GO
+
+EXEC usp_GetSalesByClientReport 6387
+EXEC usp_GetSalesByClientReport NULL
+EXEC usp_GetSalesByClientReport 1
+GO
+
+CREATE FUNCTION ufn_GetSalesByClientReport
+(@personID int)
+RETURNS TABLE
+AS
+
+RETURN
+(
+	WITH SalesHeader_CTE (orderID, orderDate, customerName)
+	AS
+	(
+		SELECT
+			soh.SalesOrderID,
+			soh.OrderDate,
+			CONCAT(pp.FirstName , ' ', pp.LastName) AS CustomerName
+		FROM
+			Sales.SalesOrderHeader AS soh
+			INNER JOIN Sales.Customer AS sc
+			ON soh.CustomerID = sc.CustomerID
+			INNER JOIN Person.Person AS pp
+			On sc.PersonID = pp.BusinessEntityID
+		WHERE pp.BusinessEntityID = @personID
+	),
+	ProductCategories_CTE (productCategoryID, productSubcategoryID,
+	SubCategoryQty, orderID)
+	AS
+	(
+		SELECT
+			ppc.ProductCategoryID,
+			pps.ProductSubcategoryID,
+			SUM(ssod.OrderQty) AS SubCategoryQty,
+			shc.orderID
+		FROM
+			Sales.SalesOrderDetail AS ssod
+			INNER JOIN  Production.Product AS pp
+				ON ssod.ProductID = pp.ProductID
+			INNER JOIN Production.ProductSubcategory AS pps
+				ON pp.ProductSubcategoryID = pps.ProductSubcategoryID
+			INNER JOIN Production.ProductCategory AS ppc
+				ON pps.ProductCategoryID = ppc.ProductCategoryID
+			INNER JOIN SalesHeader_CTE AS shc
+			ON ssod.SalesOrderID = shc.orderID
+		GROUP BY ppc.ProductCategoryID,
+		pps.ProductSubcategoryID, shc.orderID
+	),
+	SalesDetail_CTE (orderID,
+	productCategoryID, productSubcategoryID, SubCategoryQty,
+	productID, productNumber, quantity)
+	AS
+	(
+		SELECT
+			pcc.orderID,
+			pcc.productCategoryID, pcc.productSubcategoryID, pcc.SubCategoryQty,
+			pp.ProductNumber, pp.ProductID, ssod.OrderQty
+		FROM
+			Sales.SalesOrderDetail AS ssod
+			INNER JOIN Production.Product AS pp
+			ON ssod.ProductID = pp.ProductID
+			INNER JOIN ProductCategories_CTE AS pcc
+			ON pp.ProductSubcategoryID = pcc.productSubcategoryID AND
+			ssod.SalesOrderID = pcc.orderID
+	)
+	
+	SELECT
+	shc.orderID,
+	shc.customerName,
+	shc.orderDate,
+	(SELECT [Name] FROM Production.ProductCategory
+	WHERE ProductCategoryID = sdc.productCategoryID) AS PCName,
+	(SELECT [Name] FROM Production.ProductSubcategory
+	WHERE ProductSubcategoryID = sdc.productSubcategoryID) AS PSCName,
+	sdc.SubCategoryQty,
+	sdc.productID,
+	sdc.productNumber,
+	sdc.quantity
+	FROM
+		SalesDetail_CTE AS sdc INNER JOIN SalesHeader_CTE AS shc
+		ON sdc.orderID = shc.orderID
+)
+
+SELECT * FROM ufn_GetSalesByClientReport(6387)
