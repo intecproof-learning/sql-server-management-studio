@@ -769,3 +769,11 @@ RETURN
 )
 
 SELECT * FROM ufn_GetSalesByClientReport(6387)
+
+SET STATISTICS IO ON
+SET STATISTICS TIME ON
+SELECT * FROM ufn_GetSalesByClientReport(6387)
+EXEC usp_GetSalesByClientReport 6387
+EXEC usp_GetSalesByClientReport_Cursos
+SET STATISTICS IO OFF
+SET STATISTICS TIME OFF
