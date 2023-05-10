@@ -299,7 +299,7 @@ DECLARE SalesHeader CURSOR FOR
 		INNER JOIN Person.Person AS pp
 		On sc.PersonID = pp.BusinessEntityID
 	WHERE pp.BusinessEntityID = 6387
-OPEN SalesHeader
+	OPEN SalesHeader
 	FETCH NEXT FROM SalesHeader
 	INTO @orderID, @orderDate, @customerName
 
