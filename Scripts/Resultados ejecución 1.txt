@@ -1,0 +1,27 @@
+JOrge - 493
+Table 'Person'. Scan count 1, logical reads 110, physical reads 3, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Customer'. Scan count 1, logical reads 123, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'SalesOrderHeader'. Scan count 1, logical reads 689, physical reads 0
+
+Isa - 576
+Table 'SalesOrderHeader'. Scan count 1, logical reads 689, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Customer'. Scan count 1, logical reads 123, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Person'. Scan count 1, logical reads 107, physical reads 0
+
+Leo - 608
+Table 'SalesOrderHeader'. Scan count 1, logical reads 689, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Person'. Scan count 1, logical reads 107, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Customer'. Scan count 1, logical reads 123, physical reads 0
+
+Ab - 454
+Table 'SalesOrderHeader'. Scan count 1, logical reads 689, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Customer'. Scan count 1, logical reads 123, physical reads 0, page server reads 0, read-ahead reads 0, page server read-ahead reads 0, lob logical reads 0, lob physical reads 0, lob page server reads 0, lob read-ahead reads 0, lob page server read-ahead reads 0.
+Table 'Person'. Scan count 1, logical reads 107, physical reads 0
+
+
+
+
+
+
+
+
