@@ -1,7 +1,7 @@
 ---Query con OR
-CREATE PROCEDURE usp_Abraham
+ALTER PROCEDURE usp_Abraham
 AS
-DECLARE @personID int = 6387
+DECLARE @personID int = NULL
 SELECT
 	soh.SalesOrderID,
 	soh.OrderDate,
@@ -19,10 +19,10 @@ GO
 
 
 --Query de Leo
-CREATE PROCEDURE usp_Leo
+ALTER PROCEDURE usp_Leo
 AS
-declare @inicio int =  6387 
-declare @fin int =  6387 
+declare @inicio int =  0 
+declare @fin int =  9999999 
 
 SELECT
 		soh.SalesOrderID,
@@ -38,10 +38,10 @@ SELECT
 GO
 
 --Query de Isabel
-CREATE PROCEDURE usp_Isa
+ALTER PROCEDURE usp_Isa
 AS
-DECLARE @tipo int = 1
-DECLARE @idCliente int = 6387
+DECLARE @tipo int = 2
+DECLARE @idCliente int = 0
 
 SELECT
 			soh.SalesOrderID,
@@ -60,9 +60,9 @@ GO
 
 
 --Jorge
-CREATE PROCEDURE usp_Jorge
+ALTER PROCEDURE usp_Jorge
 AS
-DECLARE @idCliente int = 6387
+DECLARE @idCliente int = 0
 SELECT 
 soh.SalesOrderID,
 soh.OrderDate,
