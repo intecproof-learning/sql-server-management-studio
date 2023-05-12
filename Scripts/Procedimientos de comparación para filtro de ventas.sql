@@ -74,7 +74,7 @@ ON soh.CustomerID = sc.CustomerID
 INNER JOIN Person.Person AS pp
 On sc.PersonID = pp.BusinessEntityID
 WHERE pp.BusinessEntityID = @idCliente
-union 
+union all
 SELECT 
 soh.SalesOrderID,
 soh.OrderDate,
@@ -92,8 +92,8 @@ GO
 SET STATISTICS IO ON
 SET STATISTICS TIME ON
 EXEC usp_Jorge
-EXEC usp_Isa
-EXEC usp_Leo
-EXEC usp_Abraham
+--EXEC usp_Isa
+--EXEC usp_Leo
+--EXEC usp_Abraham
 SET STATISTICS IO OFF
 SET STATISTICS TIME OFF
