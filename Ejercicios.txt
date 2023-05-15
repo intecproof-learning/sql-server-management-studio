@@ -1,0 +1,20 @@
+1.- Mostrar a todos los empleados que se encuentran en el departamento de manufactura y de aseguramiento de la calidad.
+
+2.- Indicar el listado de los empleados del sexo masculino y que son solteros
+
+3.- Empleados cuyo apellido sea con la letra “S”
+
+4.- Los empleados que son del estado de Florida
+
+5.- La suma de las ventas hechas por cada empleado, y agrupadas por año
+
+6.- El producto más vendido
+
+7.- El producto menos vendido
+
+8.- Listado de productos por número de ventas ordenando de mayor a menor
+
+9.- Ventas por territorio
+
+10.- Crear un procedimiento almacenado que me permita consultar las ventas de un cliente específico por cualquier columna
+
