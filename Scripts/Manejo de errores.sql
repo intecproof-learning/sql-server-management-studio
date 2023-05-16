@@ -1,0 +1,1 @@
+--https://learn.microsoft.com/es-mx/sql/relational-databases/errors-events/database-engine-error-severities?view=sql-server-ver16
