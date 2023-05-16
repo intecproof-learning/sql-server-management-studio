@@ -17,7 +17,7 @@ SELECT * FROM HumanResources.Employee where Gender  = 'M' AND MaritalStatus = 'S
 SELECT * FROM HumanResources.Employee e 
 INNER JOIN Person.PersON p 
 ON e.BusinessEntityID = p.BusinessEntityID
-AND p.LastName like 'S%';
+AND p.LastName like '%S%';
 
 --4.- Los empleados que sON del estado de Florida
 SELECT pp.*,ps.[Name] FROM HumanResources.Employee he
@@ -40,8 +40,10 @@ ON qh.BusinessEntityID = pp.BusinessEntityID
 GROUP BY pp.BusinessEntityID, YEAR(QuotaDate), pp.FirstName
 ORDER BY  pp.BusinessEntityID;
 
+SELECT * FROM Sales.SalesPersonQuotaHistory
+SELECT * FROM Sales.SalesOrderHeader
 --6.- El producto más vendido
-SELECT top 1 pp.ProductID, pp.[Name], COUNT(ss.ProductID) AS veces_vendido
+SELECT TOP 1 pp.ProductID, pp.[Name], COUNT(ss.ProductID) AS veces_vendido
 FROM Production.Product pp
 INNER JOIN Sales.SalesOrderDetail ss
 ON pp.ProductID = ss.ProductID
@@ -88,4 +90,5 @@ AS
 GO
 
 SELECT * FROM ufn_GetSalesByClientReport(6387)
-EXEC usp_GetSalesByClientandColumn 6387, 'PCName', 'Accessories'
+EXEC usp_GetSalesByClientandColumn 6387, 'SubCategoryQty', '1'
+SELECT * FROM ufn_GetSalesByClientReport(6387) WHERE CONVERT(nvarchar(100), PCName) = 'Accessories'
