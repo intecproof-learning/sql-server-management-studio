@@ -348,3 +348,21 @@ BEGIN CATCH
 		ROLLBACK TRAN TRN2
 END CATCH
 SELECT * FROM Usuarios --31
+
+--Ejercicio
+CREATE PROCEDURE usp_Ocurrencia
+@cadena1 nvarchar(50),
+@cadena2 nvarchar(2)
+AS
+	IF @cadena1 IS NULL OR @cadena1 = ''
+		THROW 50001, 'El valor de cadena 1 no puede ser nulo ni vacío', 1;
+	
+	IF @cadena2 IS NULL OR @cadena2 = ''
+		THROW 50001, 'El valor de cadena 2 no puede ser nulo ni vacío', 1;
+	
+	DECLARE @tmp nvarchar(1) = LEFT(@cadena2, 1)
+	SET @cadena2 = REPLACE(@cadena2, @tmp, '')
+	SELECT COUNT(*) FROM string_split(@cadena1, @tmp) WHERE [value] LIKE CONCAT(@cadena2,'%')
+GO
+
+EXEC usp_Ocurrencia 'abdcabcabcdabcdacdab', 'AB'
