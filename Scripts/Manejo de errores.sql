@@ -43,3 +43,308 @@ BEGIN CATCH
 	ERROR_MESSAGE() AS ErrorMessage
 	INTO Errores
 END CATCH
+
+
+BEGIN TRY
+	SELECT 1/0
+END TRY
+BEGIN CATCH
+	IF EXISTS (SELECT * FROM sys.objects
+	WHERE OBJECT_ID = OBJECT_ID(N'[Errores]') AND [type] = N'U')
+	BEGIN
+		INSERT INTO Errores
+		SELECT
+		GETDATE() AS [Execution Date],
+		SUSER_NAME() AS [User Name],
+		ERROR_NUMBER() AS [Error Number],
+		ERROR_LINE() AS [Error Line],
+		ERROR_SEVERITY() AS [Error Severity],
+		ERROR_STATE() AS [Error State],
+		ERROR_PROCEDURE() AS [Error Procedure],
+		ERROR_MESSAGE() AS [Error Message]
+	END
+	ELSE 
+	BEGIN
+		SELECT
+		GETDATE() AS [Execution Date],
+		SUSER_NAME() AS [User Name],
+		ERROR_NUMBER() AS [Error Number],
+		ERROR_LINE() AS [Error Line],
+		ERROR_SEVERITY() AS [Error Severity],
+		ERROR_STATE() AS [Error State],
+		ERROR_PROCEDURE() AS [Error Procedure],
+		ERROR_MESSAGE() AS [Error Message]
+		INTO Errores
+	END
+END CATCH
+
+BEGIN TRY
+	SELECT 1/0
+END TRY
+BEGIN CATCH
+	IF EXISTS (SELECT * FROM sys.objects
+	WHERE OBJECT_ID = OBJECT_ID(N'[Errores]') AND [type] = N'U')
+	BEGIN
+		INSERT INTO Errores
+		SELECT
+		GETDATE() AS [Execution Date],
+		SUSER_NAME() AS [User Name],
+		ERROR_NUMBER() AS [Error Number],
+		ERROR_LINE() AS [Error Line],
+		ERROR_SEVERITY() AS [Error Severity],
+		ERROR_STATE() AS [Error State],
+		ERROR_PROCEDURE() AS [Error Procedure],
+		ERROR_MESSAGE() AS [Error Message]
+	END
+	ELSE 
+	BEGIN
+		SELECT
+		GETDATE() AS [Execution Date],
+		SUSER_NAME() AS [User Name],
+		ERROR_NUMBER() AS [Error Number],
+		ERROR_LINE() AS [Error Line],
+		ERROR_SEVERITY() AS [Error Severity],
+		ERROR_STATE() AS [Error State],
+		ERROR_PROCEDURE() AS [Error Procedure],
+		ERROR_MESSAGE() AS [Error Message]
+		INTO Errores
+	END
+
+	;THROW;
+END CATCH
+
+BEGIN TRY
+	DECLARE @dividendo int = 1
+	DECLARE @divisor int = 0
+
+	IF @divisor = 0
+	BEGIN
+		--SELECT * FROM sys.messages WHERE message_id = 8134
+		;THROW 50004, 'No es posible que el divisor dea 0', 1;
+	END
+
+	SELECT @dividendo/@divisor
+END TRY
+BEGIN CATCH
+	IF EXISTS (SELECT * FROM sys.objects
+	WHERE OBJECT_ID = OBJECT_ID(N'[Errores]') AND [type] = N'U')
+	BEGIN
+		INSERT INTO Errores
+		SELECT
+		GETDATE() AS [Execution Date],
+		SUSER_NAME() AS [User Name],
+		ERROR_NUMBER() AS [Error Number],
+		ERROR_LINE() AS [Error Line],
+		ERROR_SEVERITY() AS [Error Severity],
+		ERROR_STATE() AS [Error State],
+		ERROR_PROCEDURE() AS [Error Procedure],
+		ERROR_MESSAGE() AS [Error Message]
+	END
+	ELSE 
+	BEGIN
+		SELECT
+		GETDATE() AS [Execution Date],
+		SUSER_NAME() AS [User Name],
+		ERROR_NUMBER() AS [Error Number],
+		ERROR_LINE() AS [Error Line],
+		ERROR_SEVERITY() AS [Error Severity],
+		ERROR_STATE() AS [Error State],
+		ERROR_PROCEDURE() AS [Error Procedure],
+		ERROR_MESSAGE() AS [Error Message]
+		INTO Errores
+	END
+
+	;THROW;
+END CATCH
+
+CREATE TABLE Usuarios
+(
+	id int PRIMARY KEY IDENTITY(1, 1),
+	nombre nvarchar(50) NOT NULL,
+	idRol int NOT NULL
+)
+
+BEGIN TRAN --TRAN O TRANSACTION ES LO MISMO --Esto es estructura de desarrollo
+BEGIN TRY
+	INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 1', 1)
+	INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 2', 2)
+	INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 3', 3)
+	INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 4', 4)
+
+	COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+END CATCH
+SELECT * FROM Usuarios
+
+
+BEGIN TRY
+	BEGIN TRAN
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 1', 1)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 2', 2)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 3', 3)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 4', 4)
+
+	COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+END CATCH
+SELECT * FROM Usuarios
+
+BEGIN TRY
+	BEGIN TRAN
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 1', 1)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 2', 2)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 3', NULL)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 4', 4)
+	COMMIT TRANSACTION
+
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 5', 5)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 6', 6)
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+END CATCH
+SELECT * FROM Usuarios -- 8 filas
+
+BEGIN TRY
+	BEGIN TRAN
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 1', 1)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 2', 2)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 3', 3)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 4', 4)
+	COMMIT TRANSACTION
+
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 5', 5)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 6', 6)
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+END CATCH
+SELECT * FROM Usuarios
+
+BEGIN TRY
+	INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 5', 5)
+	INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 6', 6)
+	BEGIN TRAN
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 1', 1)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 2', 2)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 3', NULL)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 4', 4)
+	COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+END CATCH
+SELECT * FROM Usuarios --14 filas
+
+BEGIN TRY
+	BEGIN TRAN
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 1', 1)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 2', 2)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 3', 3)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 4', 4)
+	COMMIT TRANSACTION
+
+	INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 5', 5)
+	INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 6', NULL)
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+END CATCH
+SELECT * FROM Usuarios --16 filas
+
+BEGIN TRY
+	BEGIN TRAN TRN1
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 1', 1)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 2', 2)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 3', 3)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 4', 4)
+	COMMIT TRANSACTION TRN1
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN TRN1
+END CATCH
+SELECT * FROM Usuarios --21 filas
+
+BEGIN TRY
+	BEGIN TRAN TRN1
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 1', 1)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 2', 2)
+	COMMIT TRANSACTION TRN1
+
+	BEGIN TRAN TRN2
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 3', 3)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 4', 4)
+	COMMIT TRANSACTION TRN2	
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN TRN1
+	ROLLBACK TRAN TRN2
+END CATCH
+SELECT * FROM Usuarios --25
+
+BEGIN TRY
+	BEGIN TRAN TRN1
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 1', 1)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 2', 2)
+	COMMIT TRANSACTION TRN1
+
+	BEGIN TRAN TRN2
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 3', 3)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 4', NULL)
+	COMMIT TRANSACTION TRN2	
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN TRN1
+	ROLLBACK TRAN TRN2
+END CATCH
+SELECT * FROM Usuarios --29
+
+BEGIN TRY
+	BEGIN TRAN TRN1
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 1', 1)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 2', 2)
+	COMMIT TRANSACTION TRN1
+
+	BEGIN TRAN TRN2
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 3', 3)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 4', NULL)
+	COMMIT TRANSACTION TRN2	
+END TRY
+BEGIN CATCH
+	--SELECT * FROM sys.dm_tran_active_transactions
+	IF (SELECT COUNT(*) FROM sys.dm_tran_active_transactions
+		WHERE [name] = 'TRN1') > 0
+		ROLLBACK TRAN TRN1
+
+	IF (SELECT COUNT(*) FROM sys.dm_tran_active_transactions
+		WHERE [name] = 'TRN2') > 0
+		ROLLBACK TRAN TRN2
+END CATCH
+SELECT * FROM Usuarios --31
+
+BEGIN TRY
+	BEGIN TRAN TRN1
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 1', 1)
+		INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 2', 2)
+
+		BEGIN TRAN TRN2
+			INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 3', 3)
+			INSERT INTO Usuarios (nombre, idRol) VALUES ('Usuario 4', NULL)
+		COMMIT TRANSACTION TRN2
+	COMMIT TRANSACTION TRN1	
+END TRY
+BEGIN CATCH
+	--SELECT * FROM sys.dm_tran_active_transactions
+	IF (SELECT COUNT(*) FROM sys.dm_tran_active_transactions
+		WHERE [name] = 'TRN1') > 0
+		ROLLBACK TRAN TRN1
+
+	IF (SELECT COUNT(*) FROM sys.dm_tran_active_transactions
+		WHERE [name] = 'TRN2') > 0
+		ROLLBACK TRAN TRN2
+END CATCH
+SELECT * FROM Usuarios --31
