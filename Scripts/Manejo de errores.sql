@@ -1,1 +1,45 @@
 --https://learn.microsoft.com/es-mx/sql/relational-databases/errors-events/database-engine-error-severities?view=sql-server-ver16
+
+
+BEGIN TRY
+	select 4/2
+	SELECT 6/3
+	SELECT 1/0
+	SELECT 'Terminado'
+END TRY
+BEGIN CATCH
+	SELECT ERROR_NUMBER() AS ErrorNumber,
+	ERROR_LINE() AS ERRORLINE,
+	ERROR_SEVERITY() AS ERRORSEVERITY,
+	ERROR_STATE() AS ERRORSTATE,
+	ERROR_PROCEDURE() AS ERRORPROCEDURE,
+	ERROR_MESSAGE() AS ERRORMESSAGE
+END CATCH
+
+BEGIN TRY
+	SELECT * FROM TablaQueNoExiste
+END TRY
+BEGIN CATCH
+	SELECT ERROR_NUMBER() AS ErrorNumber,
+	ERROR_LINE() AS ErrorLine,
+	ERROR_SEVERITY() AS ErrorSeverity,
+	ERROR_STATE() AS ErrorState,
+	ERROR_PROCEDURE() AS ErrorProcedure,
+	ERROR_MESSAGE() AS ErrorMessage
+	INTO Errores
+
+	SELECT * FROM Errores
+END CATCH
+
+BEGIN TRY
+	SELECT 1/0
+END TRY
+BEGIN CATCH
+	SELECT ERROR_NUMBER() AS ErrorNumber,
+	ERROR_LINE() AS ErrorLine,
+	ERROR_SEVERITY() AS ErrorSeverity,
+	ERROR_STATE() AS ErrorState,
+	ERROR_PROCEDURE() AS ErrorProcedure,
+	ERROR_MESSAGE() AS ErrorMessage
+	INTO Errores
+END CATCH
