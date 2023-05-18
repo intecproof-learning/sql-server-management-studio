@@ -350,9 +350,9 @@ END CATCH
 SELECT * FROM Usuarios --31
 
 --Ejercicio
-CREATE PROCEDURE usp_Ocurrencia
+ALTER PROCEDURE usp_Ocurrencia
 @cadena1 nvarchar(50),
-@cadena2 nvarchar(2)
+@cadena2 nvarchar(5)
 AS
 	IF @cadena1 IS NULL OR @cadena1 = ''
 		THROW 50001, 'El valor de cadena 1 no puede ser nulo ni vacío', 1;
@@ -362,7 +362,26 @@ AS
 	
 	DECLARE @tmp nvarchar(1) = LEFT(@cadena2, 1)
 	SET @cadena2 = REPLACE(@cadena2, @tmp, '')
-	SELECT COUNT(*) FROM string_split(@cadena1, @tmp) WHERE [value] LIKE CONCAT(@cadena2,'%')
+	SELECT COUNT(*) FROM string_split(@cadena1, @tmp)
+	WHERE [value] LIKE CONCAT(@cadena2,'%')
 GO
 
-EXEC usp_Ocurrencia 'abdcabcabcdabcdacdab', 'AB'
+
+DECLARE @cadena1 nvarchar(50) = 'abdcabcabcdabcdacdab'
+DECLARE @cadena2 nvarchar(5) = 'ab'
+
+PRINT @cadena1
+PRINT @cadena2
+
+DECLARE @tmp nvarchar(1) = LEFT(@cadena2, 1)
+PRINT @cadena2
+PRINT @tmp
+SET @cadena2 = REPLACE(@cadena2, @tmp, '')
+PRINT @cadena2
+PRINT @tmp
+SELECT * FROM string_split(@cadena1, @tmp)
+
+SELECT COUNT(*) FROM string_split(@cadena1, @tmp)
+WHERE [value] LIKE CONCAT(@cadena2,'%')
+
+EXEC usp_Ocurrencia 'abdcabcabcdabcdacdab', ''
