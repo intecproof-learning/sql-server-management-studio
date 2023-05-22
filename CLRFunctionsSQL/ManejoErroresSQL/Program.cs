@@ -16,13 +16,13 @@ namespace ManejoErroresSQL
             {
                 //var paginas = context.
                 //usp_ObtenerPaginasGetSalesAllClientsReport(100);
+                //int pag = paginas.First().Value;
 
                 ObjectParameter x = new ObjectParameter("totalItems", typeof(int));
                 context.
-usp_ObtenerPaginasGetSalesAllClientsReport_V2(100, x);
+                usp_ObtenerPaginasGetSalesAllClientsReport_V2(100, x);
 
-                //int pag = paginas.First().Value;
-                int pag = 0;
+                int pag = x.Value != null ? Convert.ToInt32(x.Value) : 0;
 
                 for (int i = 0; i < pag; i++)
                 {
