@@ -2,4 +2,4 @@
 
 2.- Crear una aplicación de consola que solicite al usuario la cantidad de elementos a desplegar, llame al procedimeinto almacenado y por cada "Enter" muestre los elementos de la página.
 
-3.- ufn_GetSalesByClientReport crear un reporte almacenado que muestre el total de ventas por producto, PCName y región
+3.- Con base en la función ufn_GetSalesByClientReport crear un procedimiento almacenado que muestre el total de ventas por producto, PCName y Región

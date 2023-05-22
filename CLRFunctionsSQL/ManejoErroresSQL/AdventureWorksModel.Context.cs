@@ -41,5 +41,37 @@ namespace ManejoErroresSQL
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_Ocurrencia", cadena1Parameter, cadena2Parameter);
         }
+    
+        [DbFunction("AdventureWorks2019Entities", "ufn_GetSalesAllClientsReport")]
+        public virtual IQueryable<ufn_GetSalesAllClientsReport_Result> ufn_GetSalesAllClientsReport(Nullable<int> skip, Nullable<int> take)
+        {
+            var skipParameter = skip.HasValue ?
+                new ObjectParameter("skip", skip) :
+                new ObjectParameter("skip", typeof(int));
+    
+            var takeParameter = take.HasValue ?
+                new ObjectParameter("take", take) :
+                new ObjectParameter("take", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<ufn_GetSalesAllClientsReport_Result>("[AdventureWorks2019Entities].[ufn_GetSalesAllClientsReport](@skip, @take)", skipParameter, takeParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> usp_ObtenerPaginasGetSalesAllClientsReport(Nullable<int> itemsPorPagina)
+        {
+            var itemsPorPaginaParameter = itemsPorPagina.HasValue ?
+                new ObjectParameter("itemsPorPagina", itemsPorPagina) :
+                new ObjectParameter("itemsPorPagina", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ObtenerPaginasGetSalesAllClientsReport", itemsPorPaginaParameter);
+        }
+    
+        public virtual int usp_ObtenerPaginasGetSalesAllClientsReport_V2(Nullable<int> itemsPorPagina, ObjectParameter totalItems)
+        {
+            var itemsPorPaginaParameter = itemsPorPagina.HasValue ?
+                new ObjectParameter("itemsPorPagina", itemsPorPagina) :
+                new ObjectParameter("itemsPorPagina", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_ObtenerPaginasGetSalesAllClientsReport_V2", itemsPorPaginaParameter, totalItems);
+        }
     }
 }

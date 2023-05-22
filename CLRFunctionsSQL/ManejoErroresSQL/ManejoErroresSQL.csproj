@@ -67,11 +67,32 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AdventureWorksModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Author.cs">
+      <DependentUpon>DemoJoinsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DemoJoinsModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DemoJoinsModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DemoJoinsModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DemoJoinsModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DemoJoinsModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DemoJoinsModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Errores.cs">
       <DependentUpon>AdventureWorksModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ufn_GetSalesAllClientsReport_Result.cs">
+      <DependentUpon>AdventureWorksModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="AdventureWorksModel.edmx">
@@ -82,6 +103,13 @@
       <DependentUpon>AdventureWorksModel.edmx</DependentUpon>
     </None>
     <None Include="App.config" />
+    <EntityDeploy Include="DemoJoinsModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DemoJoinsModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DemoJoinsModel.edmx.diagram">
+      <DependentUpon>DemoJoinsModel.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +122,16 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>AdventureWorksModel.edmx</DependentUpon>
       <LastGenOutput>AdventureWorksModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="DemoJoinsModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DemoJoinsModel.edmx</DependentUpon>
+      <LastGenOutput>DemoJoinsModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DemoJoinsModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DemoJoinsModel.edmx</DependentUpon>
+      <LastGenOutput>DemoJoinsModel.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

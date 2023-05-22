@@ -20,6 +20,32 @@ warning 6002: The table/view 'AdventureWorks2019.dbo.Errores' does not have a pr
           <Property Name="Error Procedure" Type="nvarchar" MaxLength="128" />
           <Property Name="Error Message" Type="nvarchar" MaxLength="4000" />
         </EntityType>
+        <Function Name="ufn_GetSalesAllClientsReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="skip" Type="int" Mode="In" />
+          <Parameter Name="take" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="orderID" Type="int" Nullable="false" />
+                <Property Name="customerName" Type="nvarchar" MaxLength="101" Nullable="false" />
+                <Property Name="orderDate" Type="datetime" Nullable="false" />
+                <Property Name="PCName" Type="nvarchar" MaxLength="50" />
+                <Property Name="PSCName" Type="nvarchar" MaxLength="50" />
+                <Property Name="SubCategoryQty" Type="int" />
+                <Property Name="productID" Type="nvarchar" MaxLength="25" Nullable="false" />
+                <Property Name="productNumber" Type="int" Nullable="false" />
+                <Property Name="quantity" Type="smallint" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="usp_ObtenerPaginasGetSalesAllClientsReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="itemsPorPagina" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_ObtenerPaginasGetSalesAllClientsReport_V2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="itemsPorPagina" Type="int" Mode="In" />
+          <Parameter Name="totalItems" Type="int" Mode="InOut" />
+        </Function>
         <Function Name="usp_Ocurrencia" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="cadena1" Type="nvarchar" Mode="In" />
           <Parameter Name="cadena2" Type="nvarchar" Mode="In" />
@@ -48,6 +74,17 @@ warning 6002: The table/view 'AdventureWorks2019.dbo.Errores' does not have a pr
             <Parameter Name="cadena2" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="Errores" EntityType="AdventureWorks2019Model.Errores" />
+          <FunctionImport Name="ufn_GetSalesAllClientsReport" IsComposable="true" ReturnType="Collection(AdventureWorks2019Model.ufn_GetSalesAllClientsReport_Result)">
+            <Parameter Name="skip" Mode="In" Type="Int32" />
+            <Parameter Name="take" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ObtenerPaginasGetSalesAllClientsReport" ReturnType="Collection(Int32)">
+          <Parameter Name="itemsPorPagina" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ObtenerPaginasGetSalesAllClientsReport_V2">
+            <Parameter Name="itemsPorPagina" Mode="In" Type="Int32" />
+            <Parameter Name="totalItems" Mode="InOut" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Errores">
           <Key>
@@ -62,6 +99,17 @@ warning 6002: The table/view 'AdventureWorks2019.dbo.Errores' does not have a pr
           <Property Name="Error_Procedure" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="Error_Message" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
         </EntityType>
+        <ComplexType Name="ufn_GetSalesAllClientsReport_Result">
+          <Property Type="Int32" Name="orderID" Nullable="false" />
+          <Property Type="String" Name="customerName" Nullable="false" MaxLength="101" />
+          <Property Type="DateTime" Name="orderDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="PCName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PSCName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="SubCategoryQty" Nullable="true" />
+          <Property Type="String" Name="productID" Nullable="false" MaxLength="25" />
+          <Property Type="Int32" Name="productNumber" Nullable="false" />
+          <Property Type="Int16" Name="quantity" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -83,6 +131,23 @@ warning 6002: The table/view 'AdventureWorks2019.dbo.Errores' does not have a pr
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="ufn_GetSalesAllClientsReport" FunctionName="AdventureWorks2019Model.Store.ufn_GetSalesAllClientsReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="AdventureWorks2019Model.ufn_GetSalesAllClientsReport_Result">
+                <ScalarProperty Name="orderID" ColumnName="orderID" />
+                <ScalarProperty Name="customerName" ColumnName="customerName" />
+                <ScalarProperty Name="orderDate" ColumnName="orderDate" />
+                <ScalarProperty Name="PCName" ColumnName="PCName" />
+                <ScalarProperty Name="PSCName" ColumnName="PSCName" />
+                <ScalarProperty Name="SubCategoryQty" ColumnName="SubCategoryQty" />
+                <ScalarProperty Name="productID" ColumnName="productID" />
+                <ScalarProperty Name="productNumber" ColumnName="productNumber" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_ObtenerPaginasGetSalesAllClientsReport" FunctionName="AdventureWorks2019Model.Store.usp_ObtenerPaginasGetSalesAllClientsReport" />
+          <FunctionImportMapping FunctionImportName="usp_ObtenerPaginasGetSalesAllClientsReport_V2" FunctionName="AdventureWorks2019Model.Store.usp_ObtenerPaginasGetSalesAllClientsReport_V2" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
