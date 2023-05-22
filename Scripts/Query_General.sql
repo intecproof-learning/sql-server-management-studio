@@ -90,3 +90,128 @@ FROM Sales.SalesTerritory AS sst
 INNER JOIN Sales.SalesTerritoryHistory AS ssth
 ON sst.TerritoryID = ssth.TerritoryID
 ORDER BY sst.[Name]
+
+
+--Scalar Subqueries
+SELECT MAX(SalesOrderID) AS MaxOrderID
+FROM Sales.SalesOrderHeader
+
+SELECT
+SalesOrderID, ProductID, OrderQty
+FROM Sales.SalesOrderDetail
+WHERE SalesOrderID = (SELECT MAX(SalesOrderID) FROM Sales.SalesOrderHeader)
+
+SELECT
+SalesOrderID, ProductID, OrderQty,
+(SELECT AVG(OrderQTY) FROM Sales.SalesOrderDetail) AS AVGQty
+FROM Sales.SalesOrderDetail
+WHERE SalesOrderID = (
+SELECT MAX(SalesOrderID) FROM Sales.SalesOrderHeader
+)
+
+--Subqueries de multiple valor
+SELECT
+CustomerID, SalesOrderID
+FROM Sales.SalesOrderHeader
+WHERE CustomerID IN (
+	SELECT CustomerID FROM  Sales.Customer AS sc
+	INNER JOIN Sales.SalesTerritory AS sst ON sc.TerritoryID = sst.TerritoryID
+	WHERE sst.[Name] = 'Canada'
+)
+
+SELECT
+sc.CustomerID, ssoh.SalesOrderID
+FROM Sales.Customer AS sc INNER JOIN Sales.SalesOrderHeader AS ssoh
+On sc.CustomerID = ssoh.CustomerID
+INNER JOIN Sales.SalesTerritory AS sst ON sc.TerritoryID = sst.TerritoryID
+where sst.[Name] = 'Canada'
+
+SET STATISTICS IO ON
+SET STATISTICS TIME ON
+SELECT
+CustomerID, SalesOrderID
+FROM Sales.SalesOrderHeader
+WHERE CustomerID IN (
+	SELECT CustomerID FROM  Sales.Customer AS sc
+	INNER JOIN Sales.SalesTerritory AS sst ON sc.TerritoryID = sst.TerritoryID
+	WHERE sst.[Name] = 'Canada'
+)
+
+SELECT
+sc.CustomerID, ssoh.SalesOrderID
+FROM Sales.Customer AS sc INNER JOIN Sales.SalesOrderHeader AS ssoh
+On sc.CustomerID = ssoh.CustomerID
+INNER JOIN Sales.SalesTerritory AS sst ON sc.TerritoryID = sst.TerritoryID
+where sst.[Name] = 'Canada'
+
+SELECT
+CustomerID, SalesOrderID
+FROM Sales.SalesOrderHeader AS A
+WHERE EXISTS (
+	SELECT CustomerID FROM  Sales.Customer AS sc
+	INNER JOIN Sales.SalesTerritory AS sst ON sc.TerritoryID = sst.TerritoryID
+	WHERE sst.[Name] = 'Canada' AND A.CustomerID = sc.CustomerID
+)
+
+SELECT
+sc.CustomerID, ssoh.SalesOrderID
+FROM Sales.SalesOrderHeader AS ssoh
+INNER JOIN Sales.Customer AS sc ON ssoh.CustomerID = sc.CustomerID
+INNER JOIN Sales.SalesTerritory AS sst ON sc.TerritoryID = sst.TerritoryID
+WHERE sst.[Name] = 'Canada'
+SET STATISTICS IO OFF
+SET STATISTICS TIME OFF
+
+--Subqueries corelacionados
+SELECT SalesOrderID, CustomerID, OrderDate
+FROM Sales.SalesOrderHeader AS ssoh
+WHERE SalesOrderID =(
+	SELECT MAX(SalesOrderID) FROM Sales.SalesOrderHeader AS ssoh_2
+	WHERE ssoh_2.CustomerID = ssoh.CustomerID
+	ORDER BY CustomerID, OrderDate
+)
+
+SELECT SalesOrderID, CustomerID, OrderDate
+FROM Sales.SalesOrderHeader AS ssoh
+WHERE SalesOrderID =(
+	SELECT MAX(SalesOrderID) FROM Sales.SalesOrderHeader AS ssoh_2
+	WHERE ssoh_2.CustomerID = ssoh.CustomerID
+)
+ORDER BY CustomerID, OrderDate
+
+--EXISTS Y COUNT()
+SELECT
+sc.CustomerID, ss.[Name], sc.AccountNumber
+FROM Sales.Customer AS sc INNER JOIN Sales.Store AS ss
+ON sc.StoreID = ss.BusinessEntityID
+WHERE (
+	SELECT COUNT(*) FROM Sales.SalesOrderHeader AS ssoh
+	WHERE ssoh.CustomerID = sc.CustomerID
+) > 0
+
+SELECT
+sc.CustomerID, ss.[Name], sc.AccountNumber
+FROM Sales.Customer AS sc INNER JOIN Sales.Store AS ss
+ON sc.StoreID = ss.BusinessEntityID
+WHERE (
+	SELECT COUNT(*) FROM Sales.SalesOrderHeader AS ssoh
+	WHERE ssoh.CustomerID = sc.CustomerID
+) = 0
+
+SELECT
+sc.CustomerID, ss.[Name], sc.AccountNumber
+FROM Sales.Customer AS sc INNER JOIN Sales.Store AS ss
+ON sc.StoreID = ss.BusinessEntityID
+WHERE EXISTS (
+	SELECT * FROM Sales.SalesOrderHeader AS ssoh
+	WHERE ssoh.CustomerID = sc.CustomerID
+)
+
+SELECT
+sc.CustomerID, ss.[Name], sc.AccountNumber
+FROM Sales.Customer AS sc INNER JOIN Sales.Store AS ss
+ON sc.StoreID = ss.BusinessEntityID
+WHERE NOT EXISTS (
+	SELECT * FROM Sales.SalesOrderHeader AS ssoh
+	WHERE ssoh.CustomerID = sc.CustomerID
+)
