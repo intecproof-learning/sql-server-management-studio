@@ -284,3 +284,56 @@ WHERE NOT EXISTS (
 	)
 	GROUP BY ppc.ProductCategoryID,
 	pps.ProductSubcategoryID, ssod.SalesOrderID
+
+
+--CTE con Subqueries final
+	SELECT
+	pc.SalesOrderID,
+	pc.CustomerName,
+	pc.OrderDate,
+	(SELECT [Name] FROM Production.ProductCategory
+	WHERE ProductCategoryID = pc.productCategoryID) AS PCName,
+	(SELECT [Name] FROM Production.ProductSubcategory
+	WHERE ProductSubcategoryID = pc.productSubcategoryID) AS PSCName,
+	pc.SubCategoryQty,
+	pp.ProductID,
+	pp.ProductNumber,
+	ssod.OrderQty
+FROM
+	Sales.SalesOrderDetail AS ssod
+	INNER JOIN Production.Product AS pp
+	ON ssod.ProductID = pp.ProductID
+	INNER JOIN (
+	--INNER JOIN ProductCategories_CTE AS pcc
+	--ON pp.ProductSubcategoryID = pcc.productSubcategoryID AND
+	--ssod.SalesOrderID = pcc.orderID
+	SELECT
+		ppc.ProductCategoryID,
+		pps.ProductSubcategoryID,
+		SUM(ssod.OrderQty) AS SubCategoryQty,
+		ssod.SalesOrderID,
+		(SELECT OrderDate FROM Sales.SalesOrderHeader WHERE SalesOrderID = ssod.SalesOrderID) AS OrderDate,
+		(SELECT CONCAT(FirstName , ' ', LastName) FROM Person.Person WHERE BusinessEntityID = 6387) AS CustomerName
+	FROM
+		Sales.SalesOrderDetail AS ssod
+		INNER JOIN  Production.Product AS pp
+			ON ssod.ProductID = pp.ProductID
+		INNER JOIN Production.ProductSubcategory AS pps
+			ON pp.ProductSubcategoryID = pps.ProductSubcategoryID
+		INNER JOIN Production.ProductCategory AS ppc
+			ON pps.ProductCategoryID = ppc.ProductCategoryID
+	WHERE ssod.SalesOrderID IN (
+			SELECT
+				soh.SalesOrderID
+			FROM
+				Sales.SalesOrderHeader AS soh
+				INNER JOIN Sales.Customer AS sc
+				ON soh.CustomerID = sc.CustomerID
+				INNER JOIN Person.Person AS pp
+				On sc.PersonID = pp.BusinessEntityID
+			WHERE pp.BusinessEntityID = 6387
+	)
+	GROUP BY ppc.ProductCategoryID,
+	pps.ProductSubcategoryID, ssod.SalesOrderID
+) AS pc
+ON pp.ProductSubcategoryID = pc.productSubcategoryID AND ssod.SalesOrderID = pc.SalesOrderID
