@@ -339,3 +339,76 @@ FROM
 ON pp.ProductSubcategoryID = pc.productSubcategoryID AND ssod.SalesOrderID = pc.SalesOrderID
 
 SELECT * FROM ufn_GetSalesByClientReport_V3(6387)
+
+--Merge y tablas temporales
+SELECT * FROM Production.Product
+
+UPDATE Production.Product
+SET ListPrice = 10
+WHERE [Name] = 'Adjustable Race'
+
+INSERT INTO Production.Product
+(ColumnName1, ColumnName2, ..., ColumnName3)
+VALUES(ValColumnName1, ValColumnName2, ..., ValColumnName3)
+
+--Borra registros, ya sea mediante el filtrado (registros específicos)
+--O todos los registros eliminando 1 por 1
+DELETE Production.Product
+WHERE [Name] = 'Adjustable Race'
+
+--Elimina todos los registros, omite el delete,
+--es más rápido que el delete
+--Borra las páginas relacionadas con la tabla en cuestión
+--Reinicia las columnas declaradas con identity
+TRUNCATE TABLE Production.Product
+
+GO
+CREATE PROCEDURE dbo.InsertarUnitMeasure
+@unitMeasureCode nchar(3),
+@name nvarchar(25)
+AS
+BEGIN
+	SET NOCOUNT ON;--ON se muestra en pantalla las filas manipuladas
+	--OFF no se muestra en pantalla las filas manipuladas
+	UPDATE Production.UnitMeasure SET [Name] = @name
+	WHERE UnitMeasureCode = @unitMeasureCode
+
+	IF (@@ROWCOUNT = 0)
+	BEGIN
+		INSERT INTO Production.UnitMeasure (UnitMeasureCode, [Name])
+		VALUES (@unitMeasureCode, @name)
+	END
+END
+GO
+
+SELECT * FROM Production.UnitMeasure
+EXEC InsertarUnitMeasure 'AAA', 'Test1'
+EXEC InsertarUnitMeasure 'AAA', 'Test1-Update'
+
+--Proceso MERGE
+CREATE TABLE #TablaTemporal1
+(
+	ExistingCode nchar(3),
+	ExistingName nvarchar(50),
+	ExistingDate datetime,
+	Accion nvarchar(20),
+	NewCode nchar(3),
+	[NewName] nvarchar(50),
+	NewDate datetime
+)
+GO
+
+SELECT * FROM #TablaTemporal1
+
+CREATE TABLE ##TablaTemporal2
+(
+	ExistingCode nchar(3),
+	ExistingName nvarchar(50),
+	ExistingDate datetime,
+	Accion nvarchar(20),
+	NewCode nchar(3),
+	[NewName] nvarchar(50),
+	NewDate datetime
+)
+GO
+SELECT * FROM ##TablaTemporal2
