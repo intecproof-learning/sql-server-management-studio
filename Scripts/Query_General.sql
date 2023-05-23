@@ -303,10 +303,10 @@ FROM
 	Sales.SalesOrderDetail AS ssod
 	INNER JOIN Production.Product AS pp
 	ON ssod.ProductID = pp.ProductID
-	INNER JOIN (
 	--INNER JOIN ProductCategories_CTE AS pcc
 	--ON pp.ProductSubcategoryID = pcc.productSubcategoryID AND
 	--ssod.SalesOrderID = pcc.orderID
+	INNER JOIN (
 	SELECT
 		ppc.ProductCategoryID,
 		pps.ProductSubcategoryID,
@@ -337,3 +337,5 @@ FROM
 	pps.ProductSubcategoryID, ssod.SalesOrderID
 ) AS pc
 ON pp.ProductSubcategoryID = pc.productSubcategoryID AND ssod.SalesOrderID = pc.SalesOrderID
+
+SELECT * FROM ufn_GetSalesByClientReport_V3(6387)

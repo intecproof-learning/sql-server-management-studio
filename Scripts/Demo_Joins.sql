@@ -768,7 +768,7 @@ RETURN
 		ON sdc.orderID = shc.orderID
 )
 
-SELECT * FROM ufn_GetSalesByClientReport(6387)
+SELECT * FROM ufn_GetSalesByClientReport_V3(6387)
 
 SET STATISTICS IO ON
 SET STATISTICS TIME ON
