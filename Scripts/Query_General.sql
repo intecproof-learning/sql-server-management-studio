@@ -412,3 +412,30 @@ CREATE TABLE ##TablaTemporal2
 )
 GO
 SELECT * FROM ##TablaTemporal2
+
+ALTER PROCEDURE dbo.InsertarUnitMeasure
+@unitMeasureCode nchar(3),
+@name nvarchar(25)
+AS
+BEGIN
+	MERGE Production.UnitMeasure AS tgt
+	USING (SELECT @unitMeasureCode, @name) AS
+	src (UnitMeasureCode, [Name])
+	ON (tgt.UnitMeasureCode = src.UnitMeasureCode)
+	WHEN MATCHED THEN
+		UPDATE SET [Name] = src.[Name]
+	WHEN NOT MATCHED THEN
+		INSERT (UnitMeasureCode, [Name])
+		VALUES (src.UnitMEasureCode, src.[Name])
+	OUTPUT deleted.*, $action, inserted.* INTO #TablaTemporal1;
+END
+
+
+
+EXEC InsertarUnitMeasure 'AAB', 'Test1' --insert
+SELECT * FROM #TablaTemporal1
+SELECT * FROM Production.UnitMeasure
+
+EXEC InsertarUnitMeasure 'AAA', 'Test1-MERGE' -- UPDATE
+SELECT * FROM #TablaTemporal1
+SELECT * FROM Production.UnitMeasure
