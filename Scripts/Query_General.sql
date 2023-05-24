@@ -439,3 +439,45 @@ SELECT * FROM Production.UnitMeasure
 EXEC InsertarUnitMeasure 'AAA', 'Test1-MERGE' -- UPDATE
 SELECT * FROM #TablaTemporal1
 SELECT * FROM Production.UnitMeasure
+
+GO
+CREATE PROCEDURE dbo.usp_ActualizarInventario
+@orderDate datetime
+AS
+BEGIN
+	MERGE Production.ProductInventory As tgt
+	USING (
+		SELECT ProductID, SUM(OrderQty)
+		FROM Sales.SalesOrderHeader AS ssoh
+		INNER JOIN Sales.SalesOrderDetail AS ssod
+		ON ssoh.SalesOrderID = ssod.SalesOrderID
+		AND ssoh.OrderDate = @orderDate
+		GROUP BY ProductID
+	) AS src(ProductID, OrderQty)
+	ON (tgt.ProductID = src.ProductID)
+
+	WHEN MATCHED AND tgt.Quantity - src.OrderQty <= 0
+		THEN DELETE
+	WHEN MATCHED
+		THEN UPDATE SET tgt.Quantity = tgt.Quantity - src.OrderQty,
+		tgt.ModifiedDate = GETDATE()
+	OUTPUT $action, inserted.ProductID, inserted.Quantity,
+	inserted.ModifiedDate, deleted.ProductID, deleted.Quantity,
+	deleted.ModifiedDate;
+END
+GO
+
+SELECT * FROM Production.ProductInventory
+
+SELECT ProductID, SUM(OrderQty)
+		FROM Sales.SalesOrderHeader AS ssoh
+		INNER JOIN Sales.SalesOrderDetail AS ssod
+		ON ssoh.SalesOrderID = ssod.SalesOrderID
+		AND ssoh.OrderDate = '20110531'
+		GROUP BY ProductID
+
+SELECT * FROM Sales.SalesOrderHeader
+
+EXEC dbo.usp_ActualizarInventario '20110531'
+SELECT * FROM Production.ProductInventory
+WHERE ProductID = 707
