@@ -625,3 +625,36 @@ SELECT id, tipo, resultado
 ,DENSE_RANK() OVER (ORDER BY resultado)
 ,NTILE(4) OVER (ORDER BY resultado)
 FROM Resultados
+
+--Ejercicio
+
+SELECT *
+FROM Sales.SalesOrderDetail As t1
+INNER JOIN
+(
+	SELECT
+	ssod.SalesOrderID
+	,SUM(OrderQty) AS [SUM]
+	,AVG(OrderQty) AS [AVG]
+	,COUNT(OrderQty) AS [COUNT]
+	,MIN(OrderQty) AS [MIN]
+	,MAX(OrderQty) AS [MAX]
+	FROM Sales.SalesOrderDetail AS ssod
+	INNER JOIN Sales.SalesOrderHeader AS ssoh
+	ON ssod.SalesOrderID = ssoh.SalesOrderID
+	WHERE ssoh.OrderDate BETWEEN '2011/05/31' AND '2011/06/30'
+	GROUP BY ssod.SalesOrderID
+) AS T2
+ON t1.SalesOrderDetailID = t2.SalesOrderID
+
+SELECT
+ssod.SalesOrderID, ProductID, OrderQty, OrderDate
+,SUM(OrderQty) OVER (PARTITION BY ssod.SalesOrderID) AS [SUM]
+,AVG(OrderQty) OVER (PARTITION BY ssod.SalesOrderID) AS [AVG]
+,COUNT(OrderQty) OVER (PARTITION BY ssod.SalesOrderID) AS [COUNT]
+,MIN(OrderQty) OVER (PARTITION BY ssod.SalesOrderID) AS [MIN]
+,MAX(OrderQty) OVER (PARTITION BY ssod.SalesOrderID) AS [MAX]
+FROM Sales.SalesOrderDetail AS ssod
+INNER JOIN Sales.SalesOrderHeader AS ssoh
+ON ssod.SalesOrderID = ssoh.SalesOrderID
+WHERE ssoh.OrderDate BETWEEN '2011/05/31' AND '2011/06/30'
