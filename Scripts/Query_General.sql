@@ -618,3 +618,10 @@ central = COUNT(*) OVER (PARTITION BY tipo  ORDER BY tipo ROWS BETWEEN 4 PRECEDI
 siguiente = COUNT(*) OVER (PARTITION BY tipo  ORDER BY tipo ROWS BETWEEN CURRENT ROW
 							AND UNBOUNDED FOLLOWING)
 FROM Resultados ORDER BY tipo
+
+SELECT id, tipo, resultado
+,ROW_NUMBER() OVER (ORDER BY id)--Me indica el número de fila con base al ordenamiento
+,RANK() OVER (ORDER BY resultado)
+,DENSE_RANK() OVER (ORDER BY resultado)
+,NTILE(4) OVER (ORDER BY resultado)
+FROM Resultados
