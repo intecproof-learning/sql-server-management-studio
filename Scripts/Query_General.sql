@@ -497,4 +497,117 @@ INSERT ([Name], ReasonType) VALUES (NuevoNombre, NuevaRazon)
 OUTPUT $action INTO @cambio;
 SELECT * FROM @cambio
 
----------------------------
+---------------------------INSERCT / EXCEPT
+
+SELECT color FROM Production.Product
+WHERE ProductID BETWEEN 500 AND 750
+INTERSECT
+SELECT color FROM Production.Product
+WHERE ProductID BETWEEN 751 AND 1000
+
+SELECT color FROM Production.Product
+WHERE ProductID BETWEEN 500 AND 750
+EXCEPT
+SELECT color FROM Production.Product
+WHERE ProductID BETWEEN 751 AND 1000
+
+----------------------Window Queries
+SELECT
+object_id, [type], [type_desc]
+FROM sys.objects
+ORDER BY [type]
+
+SELECT
+--object_id, [type], [type_desc],
+maximo = MAX(object_id),
+minimo = MIN(object_id)
+FROM sys.objects
+ORDER BY [type]
+
+SELECT
+object_id, [type], [type_desc],
+maximo = (SELECT MAX(object_id) FROM sys.objects WHERE [type] = so.[type]),
+minimo = (SELECT MIN(object_id) FROM sys.objects WHERE [type] = so.[type])
+FROM sys.objects AS so
+ORDER BY [type]
+
+SELECT
+object_id, [type], [type_desc],
+maximo = MAX(object_id) OVER (PARTITION BY [type]),
+minimo = MIN(object_id) OVER (PARTITION BY [type])
+FROM sys.objects AS so
+ORDER BY [type]
+
+SELECT
+object_id, [type], [type_desc],
+maximo = MAX(object_id) OVER (PARTITION BY [type] ORDER BY object_id),
+minimo = MIN(object_id) OVER (PARTITION BY [type] ORDER BY object_id)
+FROM sys.objects AS so
+
+CREATE TABLE Resultados
+(
+	id int NOT NULL PRIMARY KEY,
+	tipo nvarchar(50) NOT NULL,
+	resultado int NOT NULL
+)
+
+INSERT INTO Resultados (id, tipo, resultado)
+VALUES (1, 'Tipo 1', 2),
+(2, 'Tipo 1', 2),
+(3, 'Tipo 1', 2),
+(4, 'Tipo 2', 2),
+(5, 'Tipo 2', 2),
+(6, 'Tipo 2', 2)
+
+SELECT * FROM Resultados
+
+SELECT
+id, tipo,
+maximo = MAX(id) OVER (PARTITION BY tipo),
+minimo = MIN(id) OVER (PARTITION BY tipo)
+FROM Resultados
+
+SELECT
+id, tipo,
+maximo = MAX(id) OVER (PARTITION BY tipo ORDER BY id),
+minimo = MIN(id) OVER (PARTITION BY tipo ORDER BY id)
+FROM Resultados
+
+INSERT INTO Resultados (id, tipo, resultado)
+VALUES (7, 'Tipo 1', 2),
+(8, 'Tipo 1', 2),
+(9, 'Tipo 2', 2),
+(10, 'Tipo 2', 2),
+(11, 'Tipo 3', 2),
+(12, 'Tipo 3', 2),
+(13, 'Tipo 3', 2),
+(14, 'Tipo 3', 2),
+(15, 'Tipo 3', 2),
+(16, 'Tipo 4', 2),
+(17, 'Tipo 4', 2),
+(18, 'Tipo 4', 2),
+(19, 'Tipo 4', 2),
+(20, 'Tipo 4', 2),
+(21, 'Tipo 5', 2),
+(22, 'Tipo 5', 2),
+(23, 'Tipo 5', 2),
+(24, 'Tipo 5', 2),
+(25, 'Tipo 5', 2)
+
+
+SELECT id, tipo,
+antes = COUNT(*) OVER(ORDER BY id ROWS BETWEEN
+					UNBOUNDED PRECEDING AND CURRENT ROW),
+central = COUNT(*) OVER (ORDER BY tipo  ROWS BETWEEN 2 PRECEDING
+						AND 2 FOLLOWING),
+siguiente = COUNT(*) OVER (ORDER BY tipo ROWS BETWEEN CURRENT ROW
+							AND UNBOUNDED FOLLOWING)
+FROM Resultados ORDER BY id ASC
+
+
+
+SELECT * FROM Resultados
+ORDER BY tipo
+
+SELECT * FROM Resultados
+ORDER BY id, tipo
