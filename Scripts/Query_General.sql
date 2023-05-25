@@ -559,7 +559,7 @@ VALUES (1, 'Tipo 1', 2),
 (5, 'Tipo 2', 2),
 (6, 'Tipo 2', 2)
 
-SELECT * FROM Resultados
+SELECT * FROM Resultados WHERE tipo = 'Tipo 1'
 
 SELECT
 id, tipo,
@@ -595,19 +595,26 @@ VALUES (7, 'Tipo 1', 2),
 (25, 'Tipo 5', 2)
 
 
-SELECT id, tipo,
-antes = COUNT(*) OVER(ORDER BY id ROWS BETWEEN
+SELECT id, tipo, resultado,
+antes = SUM(resultado) OVER(ORDER BY tipo ROWS BETWEEN
 					UNBOUNDED PRECEDING AND CURRENT ROW),
-central = COUNT(*) OVER (ORDER BY tipo  ROWS BETWEEN 2 PRECEDING
+central = COUNT(*) OVER (ORDER BY tipo  ROWS BETWEEN 4 PRECEDING
 						AND 2 FOLLOWING),
 siguiente = COUNT(*) OVER (ORDER BY tipo ROWS BETWEEN CURRENT ROW
 							AND UNBOUNDED FOLLOWING)
-FROM Resultados ORDER BY id ASC
-
-
+FROM Resultados ORDER BY tipo
 
 SELECT * FROM Resultados
 ORDER BY tipo
 
-SELECT * FROM Resultados
+SELECT id, tipo FROM Resultados
 ORDER BY id, tipo
+
+SELECT id, tipo, resultado,
+antes = SUM(resultado) OVER(PARTITION BY tipo ORDER BY tipo ROWS BETWEEN
+					UNBOUNDED PRECEDING AND CURRENT ROW),
+central = COUNT(*) OVER (PARTITION BY tipo  ORDER BY tipo ROWS BETWEEN 4 PRECEDING
+						AND 2 FOLLOWING),
+siguiente = COUNT(*) OVER (PARTITION BY tipo  ORDER BY tipo ROWS BETWEEN CURRENT ROW
+							AND UNBOUNDED FOLLOWING)
+FROM Resultados ORDER BY tipo
