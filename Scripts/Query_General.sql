@@ -481,3 +481,20 @@ SELECT * FROM Sales.SalesOrderHeader
 EXEC dbo.usp_ActualizarInventario '20110531'
 SELECT * FROM Production.ProductInventory
 WHERE ProductID = 707
+
+SELECT * FROM Sales.SalesReason
+
+DECLARE @cambio TABLE (cambio nvarchar(20))
+MERGE INTO Sales.SalesReason AS tgt
+USING (VALUES ('Recomendación', 'Other'),
+('Review', 'Marketing'),
+('Internet', 'Promotion')) AS src (NuevoNombre, NuevaRazon)
+ON (tgt.[Name] = src.NuevoNombre)
+WHEN MATCHED THEN
+	UPDATE SET ReasonType = src.NuevaRazon
+WHEN NOT MATCHED BY TARGET THEN
+INSERT ([Name], ReasonType) VALUES (NuevoNombre, NuevaRazon)
+OUTPUT $action INTO @cambio;
+SELECT * FROM @cambio
+
+---------------------------
