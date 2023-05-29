@@ -76,17 +76,23 @@ ON pp.BusinessEntityID = pa.AddressID
 --Ejercicio 3
 SELECT
 CONCAT(pp.FirstName, pp.LastName) AS FullName,
+
 ssp.SalesYTD,
+
 SalesYTDAcumulado = SUM(ssp.SalesYTD) OVER
 (PARTITION BY YEAR(ssp.ModifiedDate) ORDER BY YEAR(ssp.ModifiedDate)
 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),
+
 ssp.SalesLastYear,
+
 Comparativa =CONCAT((SUM(ssp.SalesYTD) OVER
 (PARTITION BY YEAR(ssp.ModifiedDate) ORDER BY YEAR(ssp.ModifiedDate)
 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)) * 100 / (
 CASE WHEN SUM(ssp.SalesLastYear) OVER (PARTITION BY YEAR(ssp.ModifiedDate)) = 0 THEN 1 ELSE 
 SUM(ssp.SalesLastYear) OVER (PARTITION BY YEAR(ssp.ModifiedDate)) END), '%'),
+
 YEAR(ssp.ModifiedDate) AS SalesYear, 
+
 DATEPART(YY, ssp.ModifiedDate) AS SalesYear_2
 FROM Sales.SalesPerson AS ssp
 INNER JOIN Person.Person AS pp
