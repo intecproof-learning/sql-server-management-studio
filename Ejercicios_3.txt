@@ -1,0 +1,13 @@
+1.- Crear un query que obtenga el SalesYTD (Ventas del año a la fecha) de cada vendedor. El query debe mostrar las siguientes columnas: 
+	Número de fila: Consecutivo que enumera los vendedores que pertenecen al mismo código postal
+	Nombre completo: FirstName y LastName que se encuentran en Person.Person
+	SalesYTD: Ventas del año a la fecha, se encuentra en Sales.SalesPerson
+	Código Postal: Código postal del domicilio del vendedor, se encuentra en Person.Address. No debe incluir nulos
+
+2.- Crear un query que obtenga el SalesYTD (Ventas del año a la fecha) de cada vendedor. El query debe mostrar las siguientes columnas: 
+	Número de fila: Consecutivo que enumera los vendedores sin importar a qué codigo postal pertenecen
+	Nombre completo: FirstName y LastName que se encuentran en Person.Person
+	SalesYTD: Ventas del año a la fecha, se encuentra en Sales.SalesPerson
+	Código Postal: Código postal del domicilio del vendedor, se encuentra en Person.Address. No debe incluir nulos
+
+3.- Escribir un query que muestre el acumulado de SalesYTD por cada SalesPerson por año y la comparativa en porcentaje de cada fila VS el año anterior (SalesLastYear)
