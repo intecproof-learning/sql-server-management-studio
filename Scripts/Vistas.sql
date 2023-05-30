@@ -78,7 +78,7 @@ GO
 
 ALTER TABLE dbo.Resultados DROP COLUMN resultado
 GO
-------------------------------CHECL OPTION
+------------------------------CHECK OPTION
 EXEC CrearTablaTrabajo
 GO
 
@@ -121,4 +121,48 @@ GO
 
 ALTER TABLE dbo.Resultados ADD CONSTRAINT [DF_Resultados(resultado)]
 DEFAULT 2 FOR resultado
+GO
+
+ALTER VIEW VistaSchemaBindingEdit
+WITH SCHEMABINDING
+AS
+	SELECT id, tipo, resultado
+	FROM dbo.Resultados
+	WHERE tipo = 'Tipo 6'
+GO
+
+UPDATE VistaSchemaBindingEdit SET tipo = 'Tipo 1.1' WHERE tipo = 'Tipo 1'
+GO
+
+UPDATE VistaSchemaBindingEdit SET tipo = 'Tipo 7' WHERE tipo = 'Tipo 6'
+GO
+
+SELECT * FROM VistaSchemaBindingEdit
+GO
+
+SELECT * FROM dbo.Resultados
+GO
+
+ALTER VIEW VistaSchemaBindingEdit
+WITH SCHEMABINDING
+AS
+	SELECT id, tipo, resultado
+	FROM dbo.Resultados
+	WHERE tipo = 'Tipo 7'
+	WITH CHECK OPTION
+GO
+
+UPDATE VistaSchemaBindingEdit SET tipo = 'Tipo 1.1' WHERE tipo = 'Tipo 1'
+GO
+
+UPDATE VistaSchemaBindingEdit SET tipo = 'Tipo 6' WHERE tipo = 'Tipo 7'
+GO
+
+UPDATE VistaSchemaBindingEdit SET resultado = 6 WHERE tipo = 'Tipo 7'
+GO
+
+SELECT * FROM VistaSchemaBindingEdit
+GO
+
+SELECT * FROM dbo.Resultados
 GO
