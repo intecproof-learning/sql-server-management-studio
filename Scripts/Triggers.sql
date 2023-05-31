@@ -60,7 +60,7 @@ AS
 	IF EXISTS (SELECT 1 FROM inserted WHERE resultado < 2)
 	BEGIN
 		RAISERROR ('No puedes insertar un valor menor a 2', 16, 1)
-		<
+		ROLLBACK TRANSACTION
 	END
 GO
 
@@ -69,4 +69,54 @@ VALUES(32, 'Tipo 7', 1)
 GO
 
 SELECT * FROM dbo.Resultados
+GO
+
+--------------------------------------------------------
+GO
+ALTER PROCEDURE dbo.PruebaCommitTrigger
+AS
+BEGIN
+	BEGIN TRY
+		--BEGIN TRAN TR1
+			INSERT INTO dbo.Resultados(tipo, resultado)
+			VALUES('Tipo SP', 2)
+		--COMMIT TRAN TR1
+
+		--BEGIN TRAN TR2
+			--INSERT INTO dbo.Resultados(tipo, resultado)
+			--VALUES('Tipo SP', NULL)
+		--COMMIT TRAN TR2
+	END TRY
+	BEGIN CATCH
+		--IF (SELECT COUNT(*) FROM sys.dm_tran_active_transactions
+		--	WHERE [name] = 'TR1') > 0
+		--	ROLLBACK TRAN TR1
+
+		--IF (SELECT COUNT(*) FROM sys.dm_tran_active_transactions
+		--	WHERE [name] = 'TR2') > 0
+		--	ROLLBACK TRAN TR2
+	END CATCH
+END
+GO
+
+EXEC dbo.PruebaCommitTrigger
+GO
+
+SELECT * FROM dbo.Resultados
+GO
+
+CREATE TRIGGER DemoSP ON Production.Culture
+AFTER INSERT, UPDATE
+AS
+	EXEC dbo.PruebaCommitTrigger
+GO
+
+UPDATE Production.Culture SET ModifiedDate = GETDATE()
+GO
+
+----------------------------------------------------------------
+--https://learn.microsoft.com/en-us/sql/relational-databases/triggers/ddl-event-groups?view=sql-server-ver16
+CREATE TRIGGER DemoBaseDatos
+ON DATABASE FOR DROP_TABLE
+AS
 GO
