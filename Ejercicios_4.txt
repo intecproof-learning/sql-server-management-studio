@@ -7,3 +7,10 @@ GETDATE() para obtener la fecha d eejecución
 
 2.- Crear un trigger que no permita el inicio de sesión para un usuario específico en un rango de horas. Si el usuario es rechazado se debe enviar un correo con la notificación.
 El evento que debes usar para el trigger es LOGON
+
+USE master;  
+GO  
+CREATE LOGIN login_test WITH PASSWORD = '3KHJ6dhx(0xVYsdf';  
+GO  
+GRANT VIEW SERVER STATE TO login_test;  
+GO
