@@ -3,7 +3,7 @@ El query original que desencadenó el primer trigger, debe guardarse en una tabl
 Puedes usar EXEC('DBCC INPUTBUFFER(@@SPID)') para obtener el query original que desencadenó el primer trigger
 ORIGINAL_LOGIN() para obtener el nombre dle usuario
 @@SERVERNAME para obtener el nombre del servidor
-GETDATE() para obtener la fecha d eejecución
+GETDATE() para obtener la fecha de ejecución
 
 2.- Crear un trigger que no permita el inicio de sesión para un usuario específico en un rango de horas. Si el usuario es rechazado se debe enviar un correo con la notificación.
 El evento que debes usar para el trigger es LOGON
