@@ -1,0 +1,9 @@
+1.- Crear un trigger que se ejecute cada que se eliminen registros de HumanResources.EmployeeDepartmentHistory el trigger debe validar si aún quedan registros asociados con alguno de los DepartmentID eliminados. Si algún o algunos DepartmentID ya no tienen registros en HumanResources.EmployeeDepartmentHistory debe eliminar ese o esos Departamentos de HumanResources.Department
+El query original que desencadenó el primer trigger, debe guardarse en una tabla de operaciones junto con el nombre de usuario, nombre del servidor y fecha de operación y todas las filas eliminadas deben guardarse en una tabla de respaldo por cada tabla.
+Puedes usar EXEC('DBCC INPUTBUFFER(@@SPID)') para obtener el query original que desencadenó el primer trigger
+ORIGINAL_LOGIN() para obtener el nombre dle usuario
+@@SERVERNAME para obtener el nombre del servidor
+GETDATE() para obtener la fecha d eejecución
+
+2.- Crear un trigger que no permita el inicio de sesión para un usuario específico en un rango de horas. Si el usuario es rechazado se debe enviar un correo con la notificación.
+El evento que debes usar para el trigger es LOGON

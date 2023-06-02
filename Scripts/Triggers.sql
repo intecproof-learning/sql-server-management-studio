@@ -116,7 +116,58 @@ GO
 
 ----------------------------------------------------------------
 --https://learn.microsoft.com/en-us/sql/relational-databases/triggers/ddl-event-groups?view=sql-server-ver16
-CREATE TRIGGER DemoBaseDatos
+ALTER TRIGGER DemoBaseDatos
 ON DATABASE FOR DROP_TABLE
 AS
+	RAISERROR('No puedes eliminar la tabla', 10, 1)
+GO
+
+DROP TABLE dbo.Resultados
+GO
+
+DROP TABLE dbo.Errores
+GO
+--------------------------------------
+ALTER TRIGGER DemoBaseDatos
+ON DATABASE FOR DROP_TABLE
+AS
+	SELECT
+	EventType = EVENTDATA().value('(EVENT_INSTANCE/EventType)[1]', 'sysname')
+	, PostTime = EVENTDATA().value('(EVENT_INSTANCE/PostTime)[1]', 'datetime')
+	, SPID = EVENTDATA().value('(EVENT_INSTANCE/SPID)[1]', 'int')
+	, ServerName = EVENTDATA().value('(EVENT_INSTANCE/ServerName)[1]', 'sysname')
+	, LoginName = EVENTDATA().value('(EVENT_INSTANCE/LoginName)[1]', 'sysname')
+	, UserName = EVENTDATA().value('(EVENT_INSTANCE/UserName)[1]', 'sysname')
+	, DatabaseName = EVENTDATA().value('(EVENT_INSTANCE/DatabaseName)[1]', 'sysname')
+	, SchemaName = EVENTDATA().value('(EVENT_INSTANCE/SchemaName)[1]', 'sysname')
+	, ObjectName = EVENTDATA().value('(EVENT_INSTANCE/ObjectName)[1]', 'sysname')
+	, ObjectType = EVENTDATA().value('(EVENT_INSTANCE/ObjectType)[1]', 'sysname')
+	, TSQLCommand = EVENTDATA().value('(EVENT_INSTANCE/TSQLCommand/CommandText)[1]', 'nvarchar(max)')
+
+	IF (SELECT EVENTDATA().
+	value('(EVENT_INSTANCE/ObjectName)[1]', 'sysname')) = 'Resultados'
+	BEGIN
+		ROLLBACK
+	END
+GO
+
+DROP TABLE dbo.Resultados
+GO
+
+DROP TABLE dbo.Errores
+GO
+
+EXEC CrearTablaTrabajo
+GO
+---------------------------------------------------
+CREATE TRIGGER CrearBaseDatos
+ON ALL SERVER FOR CREATE_DATABASE
+AS
+	PRINT 'Base de datos creada'
+	SELECT EVENTDATA().value
+	('(EVENT_INSTANCE/TSQLCommand/CommandText)[1]'
+	, 'nvarchar(max)')
+GO
+
+CREATE DATABASE EjemploTrigger
 GO
