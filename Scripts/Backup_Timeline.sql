@@ -23,4 +23,14 @@ BEGIN
 	INSERT INTO dbo.Sales (country, region, sales, fecha) VALUES
 	('Mexico', 'Oeste', @counter, GETDATE())
 
+	SET @counter =	@counter + 1
+	WAITFOR DELAY '00:02:00'
 END
+
+BACKUP DATABASE AdventureWorks
+TO DISK = 'C:\Temp\AW_DR.bak'
+WITH
+MEDIANAME = 'Backup_Timeline_Simple',
+MEDIADESCRIPTION = 'Media que contiene backups en  modo simple',
+NAME = 'Segundo_Respaldo',
+DESCRIPTION = 'Segundo full backup'
