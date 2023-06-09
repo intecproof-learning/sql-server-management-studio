@@ -67,3 +67,30 @@ MEDIANAME = 'Backup_Timeline',
 MEDIADESCRIPTION = 'Media que contiene backups en  modo full',
 NAME = 'Tercer_Respaldo',
 DESCRIPTION = 'Segundo log backup'
+
+BEGIN TRANSACTION Insert_Norte_Sur
+WITH MARK 'Insercion de ventas en Mexico Norte y Sur'
+	INSERT INTO dbo.Sales (country, region, sales, fecha) VALUES
+	('Mexico', 'Norte', 201, GETDATE())
+
+	INSERT INTO dbo.Sales (country, region, sales, fecha) VALUES
+	('Mexico', 'Sur', 201, GETDATE())
+COMMIT TRANSACTION Insert_Norte_Sur
+
+BACKUP DATABASE AdventureWorks
+TO DISK = 'C:\Temp\AW_DR.bak'
+WITH DIFFERENTIAL,
+MEDIANAME = 'Backup_Timeline',
+MEDIADESCRIPTION = 'Media que contiene backups en  modo full',
+NAME = 'Cuarto_Respaldo',
+DESCRIPTION = 'Primer diferencial'
+
+BACKUP LOG AdventureWorks
+TO DISK = 'C:\Temp\AW_DR.bak'
+WITH
+MEDIANAME = 'Backup_Timeline',
+MEDIADESCRIPTION = 'Media que contiene backups en  modo full',
+NAME = 'Tercer_Respaldo',
+DESCRIPTION = 'Segundo log backup'
+
+SELECT * FROM dbo.Sales
