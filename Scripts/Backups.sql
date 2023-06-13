@@ -27,10 +27,18 @@ TO DISK = 'C:\Temp\TestAW_4.bak'
 MIRROR TO DISK = 'C:\Temp\Mirror\TestAW_4.bak'
 WITH FORMAT
 
+USE [master]
+GO
+CREATE CREDENTIAL [DbBackupCredential]
+WITH IDENTITY = 'demobackpsqlacc'
+, SECRET = 'iqZIT4XJPT5QSnW7iUOxL2EG8P4Q8ugW4K5dMsE971eik/jpKbskhB+dUnMCamV5/WUltNG/9Dew+AStAXd+Tg=='
+GO
+
+
 BACKUP DATABASE TestTrigger
 TO URL =
-'https://demobackpsqlacc.blob.core.windows.net/aw2019backups/TestAW_5.bak?sp=racwdli&st=2023-06-05T19:00:06Z&se=2023-06-06T03:00:06Z&spr=https&sv=2022-11-02&sr=c&sig=JPN8cO1aaM1DQjpaNRczWUqnVwXLMYVJrhd%2F9KtG05w%3D'
-WITH STATS
+'https://demobackpsqlacc.blob.core.windows.net/aw2019backups/TestAW_5_acc.bak'
+WITH CREDENTIAL = 'DbBackupCredential', STATS
 
 
 ---------Cambios complejos
