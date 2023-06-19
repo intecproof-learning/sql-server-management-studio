@@ -63,3 +63,14 @@ CREATE TABLE DatosReporte
 	reportName nvarchar(100),
 	reportNumber nvarchar(20)
 )
+
+INSERT INTO DatosReporte (reportID, reportName, reportNumber)
+SELECT reportID, reportName, reportNumber FROM ReporteEmpleados
+
+SET STATISTICS IO ON
+SET STATISTICS TIME ON
+SELECT reportID, reportName, reportNumber
+FROM DatosReporte
+WHERE reportNumber LIKE '%33%'
+SET STATISTICS IO OFF
+SET STATISTICS TIME OFF
