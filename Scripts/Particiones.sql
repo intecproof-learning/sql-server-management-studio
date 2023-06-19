@@ -48,3 +48,18 @@ FROM ReporteEmpleados
 WHERE reportNumber LIKE '%33%'
 SET STATISTICS IO OFF
 SET STATISTICS TIME OFF
+
+CREATE TABLE DescripcionReporte
+(
+	reportID int PRIMARY KEY FOREIGN KEY
+	REFERENCES ReporteEmpleados (reportID),
+	reportDescription nvarchar(max)
+)
+GO
+
+CREATE TABLE DatosReporte
+(
+	reportID int NOT NULL PRIMARY KEY,
+	reportName nvarchar(100),
+	reportNumber nvarchar(20)
+)
