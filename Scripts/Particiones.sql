@@ -1,3 +1,16 @@
+/*
+Particiones
+Es el proceso donde las tablas que son muy largas son divididas
+en pequeñas partes, estoo con la finalidad de que las consultas accedan solo
+a la parte correspondiente, evitando el escaneo de toda la tabla.
+*/
+
+/*
+Partición horizontal.
+Va de la mano con una refactorización de la tabla. Se generan
+tablas más pequeñas (con menos columnas)
+*/
+
 USE [master]
 CREATE DATABASE Demo_Partition
 GO
@@ -28,3 +41,10 @@ BEGIN TRAN
 	COMMIT TRAN
 GO
 
+SET STATISTICS IO ON
+SET STATISTICS TIME ON
+SELECT reportID, reportName, reportNumber
+FROM ReporteEmpleados
+WHERE reportNumber LIKE '%33%'
+SET STATISTICS IO OFF
+SET STATISTICS TIME OFF
