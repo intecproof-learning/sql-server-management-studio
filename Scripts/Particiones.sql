@@ -17,5 +17,14 @@ GO
 DECLARE @i int = 1
 BEGIN TRAN
 	WHILE @i < 100000000
-END TRAN
+	BEGIN
+		INSERT INTO ReporteEmpleados
+		(reportName, reportNumber, reportDescription)
+		VALUES
+		('Nombre', CONVERT(nvarchar(20), @i), REPLICATE('A', 1000))
+
+		SET @i =  @i + 1
+	END
+	COMMIT TRAN
+GO
 
