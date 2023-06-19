@@ -12,4 +12,10 @@ CREATE TABLE ReporteEmpleados
 	reportNumber nvarchar(20),
 	reportDescription nvarchar(MAX)
 )
+GO
+
+DECLARE @i int = 1
+BEGIN TRAN
+	WHILE @i < 100000000
+END TRAN
 
