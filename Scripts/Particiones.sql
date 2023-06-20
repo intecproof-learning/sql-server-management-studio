@@ -2,7 +2,7 @@
 Particiones
 Es el proceso donde las tablas que son muy largas son divididas
 en pequeñas partes, estoo con la finalidad de que las consultas accedan solo
-a la parte correspondiente, evitando el escaneo de toda la tabla.
+a la parte correspondiente, evitando el escaneo de toda la tabla / páginas
 */
 
 /*
@@ -29,7 +29,7 @@ GO
 
 DECLARE @i int = 1
 BEGIN TRAN
-	WHILE @i < 100000
+	WHILE @i < 1000000
 	BEGIN
 		INSERT INTO ReporteEmpleados
 		(reportName, reportNumber, reportDescription)
@@ -40,6 +40,8 @@ BEGIN TRAN
 	END
 	COMMIT TRAN
 GO
+
+SELECT * FROM ReporteEmpleados
 
 SET STATISTICS IO ON
 SET STATISTICS TIME ON
@@ -114,3 +116,119 @@ ADD FILEGROUP Noviembre
 GO
 ALTER DATABASE Demo_Partition
 ADD FILEGROUP Diciembre
+
+USE [Demo_Partition]
+GO
+
+SELECT [name] FROM sys.filegroups WHERE [type] = 'FG'
+
+USE [master]
+GO
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartEne],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_Ene.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Enero]
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartFeb],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_Feb.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Febrero]
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartMar],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_Mar.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Marzo]
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartAbr],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_Abr.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Abril]
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartMay],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_May.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Mayo]
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartJun],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_Jun.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Junio]
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartJul],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_Jul.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Julio]
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartAgo],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_Ago.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Agosto]
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartSep],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_Sep.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Septiembre]
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartOct],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_Oct.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Octubre]
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartNov],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_Nov.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Noviembre]
+
+ALTER DATABASE [Demo_Partition]
+ADD FILE(
+	NAME = [PartDic],
+	FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Demo_Partition_Dic.ndf',
+	SIZE = 3072 KB,
+	MAXSIZE = UNLIMITED,
+	FILEGROUTH = 1024 KB
+) TO FILEGROUP [Diciembre]
