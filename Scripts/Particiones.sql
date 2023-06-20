@@ -29,7 +29,7 @@ GO
 
 DECLARE @i int = 1
 BEGIN TRAN
-	WHILE @i < 100000000
+	WHILE @i < 100000
 	BEGIN
 		INSERT INTO ReporteEmpleados
 		(reportName, reportNumber, reportDescription)
@@ -74,3 +74,43 @@ FROM DatosReporte
 WHERE reportNumber LIKE '%33%'
 SET STATISTICS IO OFF
 SET STATISTICS TIME OFF
+
+------------------Particiones verticales
+USE [master]
+GO
+
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Enero
+GO
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Febrero
+GO
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Marzo
+GO
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Abril
+GO
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Mayo
+GO
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Junio
+GO
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Julio
+GO
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Agosto
+GO
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Septiembre
+GO
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Octubre
+GO
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Noviembre
+GO
+ALTER DATABASE Demo_Partition
+ADD FILEGROUP Diciembre
