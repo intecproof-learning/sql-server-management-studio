@@ -69,3 +69,13 @@ AS
 		SalesDetail_CTE AS sdc INNER JOIN SalesHeader_CTE AS shc
 		ON sdc.orderID = shc.orderID
 GO
+
+SELECT
+pp.ProductID, pp.[Name], pp.ProductNumber,
+pp.Color, ppv.BusinessEntityID, pv.[Name],
+ppv.StandardPrice
+FROM
+Production.Product AS pp INNER JOIN Purchasing.ProductVendor AS ppv
+ON pp.ProductID = ppv.ProductID
+INNER JOIN Purchasing.Vendor AS pv
+ON ppv.BusinessEntityID = pv.BusinessEntityID
