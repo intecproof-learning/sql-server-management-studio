@@ -70,12 +70,17 @@ AS
 		ON sdc.orderID = shc.orderID
 GO
 
-SELECT
-pp.ProductID, pp.[Name], pp.ProductNumber,
-pp.Color, ppv.BusinessEntityID, pv.[Name],
-ppv.StandardPrice
-FROM
-Production.Product AS pp INNER JOIN Purchasing.ProductVendor AS ppv
-ON pp.ProductID = ppv.ProductID
-INNER JOIN Purchasing.Vendor AS pv
-ON ppv.BusinessEntityID = pv.BusinessEntityID
+CREATE PROCEDURE usp_GetProductVendors_LoadTest
+@productID int
+AS
+	SELECT
+		pp.ProductID, pp.[Name], pp.ProductNumber,
+		pp.Color, ppv.BusinessEntityID, pv.[Name],
+		ppv.StandardPrice
+	FROM
+	Production.Product AS pp INNER JOIN Purchasing.ProductVendor AS ppv
+	ON pp.ProductID = ppv.ProductID
+	INNER JOIN Purchasing.Vendor AS pv
+	ON ppv.BusinessEntityID = pv.BusinessEntityID
+	WHERE pp.ProductID = @productID
+GO
