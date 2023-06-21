@@ -33,8 +33,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,11 +52,286 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Address.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AddressType.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AWBuildVersion.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AWLoadTestModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AWLoadTestModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AWLoadTestModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AWLoadTestModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AWLoadTestModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="BillOfMaterials.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessEntity.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessEntityAddress.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessEntityContact.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ContactType.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CountryRegion.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CountryRegionCurrency.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CreditCard.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Culture.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Currency.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CurrencyRate.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Customer.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DatabaseLog.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DeleteOperations.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Department.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DepartmentBackup.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EmailAddress.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Employee.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EmployeeDepartmentHistory.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EmployeeDepartmentHistoryBackup.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EmployeePayHistory.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Errores.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ErrorLog.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Illustration.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JobCandidate.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Location.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Password.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Person.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PersonCreditCard.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PersonPhone.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PhoneNumberType.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Product.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductCategory.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductCostHistory.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductDescription.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductDocument.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductInventory.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductListPriceHistory.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductModel.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductModelIllustration.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductModelProductDescriptionCulture.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductPhoto.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductProductPhoto.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductReview.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductSubcategory.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProductVendor.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PurchaseOrderDetail.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PurchaseOrderHeader.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Resultados.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SalesOrderDetail.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SalesOrderHeader.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SalesOrderHeaderSalesReason.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SalesPerson.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SalesPersonQuotaHistory.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SalesReason.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SalesTaxRate.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SalesTerritory.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SalesTerritoryHistory.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ScrapReason.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Shift.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ShipMethod.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ShoppingCartItem.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SpecialOffer.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SpecialOfferProduct.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StateProvince.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Store.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sysdiagrams.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TransactionHistory.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TransactionHistoryArchive.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UnitMeasure.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetProductVendors_LoadTest_Result.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetSalesByClientReport_LoadTest_Result.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Usuarios.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Vendor.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WorkOrder.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WorkOrderRouting.cs">
+      <DependentUpon>AWLoadTestModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EntityDeploy Include="AWLoadTestModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AWLoadTestModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="AWLoadTestModel.edmx.diagram">
+      <DependentUpon>AWLoadTestModel.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AWLoadTestModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AWLoadTestModel.edmx</DependentUpon>
+      <LastGenOutput>AWLoadTestModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="AWLoadTestModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AWLoadTestModel.edmx</DependentUpon>
+      <LastGenOutput>AWLoadTestModel.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

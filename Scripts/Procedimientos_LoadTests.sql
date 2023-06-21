@@ -1,4 +1,4 @@
-CREATE PROCEDURE dbo.usp_GetSalesByClientReport_LoadTest
+ALTER PROCEDURE dbo.usp_GetSalesByClientReport_LoadTest
 (@personID int)
 AS
 	;WITH SalesHeader_CTE (orderID, orderDate, customerName)
@@ -60,9 +60,9 @@ AS
 	SELECT
 	shc.orderID, shc.customerName, shc.orderDate,
 	(SELECT [Name] FROM Production.ProductCategory
-	WHERE ProductCategoryID = sdc.productCategoryID),
+	WHERE ProductCategoryID = sdc.productCategoryID) AS PCName,
 	(SELECT [Name] FROM Production.ProductSubcategory
-	WHERE ProductSubcategoryID = sdc.productSubcategoryID),
+	WHERE ProductSubcategoryID = sdc.productSubcategoryID) AS PSCName,
 	sdc.SubCategoryQty,
 	sdc.productID, sdc.productNumber, sdc.quantity
 	FROM
@@ -70,12 +70,12 @@ AS
 		ON sdc.orderID = shc.orderID
 GO
 
-CREATE PROCEDURE usp_GetProductVendors_LoadTest
+ALTER PROCEDURE usp_GetProductVendors_LoadTest
 @productID int
 AS
 	SELECT
-		pp.ProductID, pp.[Name], pp.ProductNumber,
-		pp.Color, ppv.BusinessEntityID, pv.[Name],
+		pp.ProductID, pp.[Name] AS [ProductName], pp.ProductNumber,
+		pp.Color, ppv.BusinessEntityID, pv.[Name] AS [VendorName],
 		ppv.StandardPrice
 	FROM
 	Production.Product AS pp INNER JOIN Purchasing.ProductVendor AS ppv
@@ -84,3 +84,7 @@ AS
 	ON ppv.BusinessEntityID = pv.BusinessEntityID
 	WHERE pp.ProductID = @productID
 GO
+
+SELECT BusinessEntityID FROM Person.Person
+
+SELECT productID FROM Production.Product
