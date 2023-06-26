@@ -123,3 +123,30 @@ GO
 EXECUTE AS USER = 'Demologin'
 SELECT * FROM fn_my_permissions('Production.Product', 'OBJECT')
 REVERT
+
+--Ejercicio Guiado
+--1.- GRANT SELECT sobre la tabla Production.Document
+GRANT SELECT ON Production.Document TO Demologin
+GO
+EXECUTE AS USER = 'Demologin'
+SELECT * FROM fn_my_permissions('Production.Document', 'OBJECT')
+REVERT
+--2.- DENY SELECT sobre la tabla Production.Document
+DENY SELECT ON Production.Document TO Demologin
+GO
+EXECUTE AS USER = 'Demologin'
+SELECT * FROM fn_my_permissions('Production.Document', 'OBJECT')
+REVERT
+
+--Pendiente
+EXECUTE AS USER = 'Demologin'
+SELECT * FROM fn_my_permissions(NULL, 'OBJECT')
+REVERT
+
+------WITH GRANT
+GRANT EXECUTE ON [dbo].[usp_GetProductVendors_LoadTest]
+TO Demologin WITH GRANT OPTION
+EXECUTE AS USER = 'Demologin'
+SELECT * FROM fn_my_permissions
+('[dbo].[usp_GetProductVendors_LoadTest]', 'OBJECT')
+REVERT
