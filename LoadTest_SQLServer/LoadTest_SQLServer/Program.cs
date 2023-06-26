@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LoadTest_SQLServer
@@ -25,8 +26,8 @@ namespace LoadTest_SQLServer
                             .Select(p => p.BusinessEntityID)
                             .ToList();
 
-                        Console.WriteLine(beids.Max());
-                        Console.WriteLine(beids.Min());
+                        //Console.WriteLine(beids.Max());
+                        //Console.WriteLine(beids.Min());
 
                         var result =
                         context.usp_GetSalesByClientReport_LoadTest
@@ -40,8 +41,8 @@ namespace LoadTest_SQLServer
                             .Select(p => p.ProductID)
                             .ToList();
 
-                        Console.WriteLine(productIDs.Max());
-                        Console.WriteLine(productIDs.Min());
+                        //Console.WriteLine(productIDs.Max());
+                        //Console.WriteLine(productIDs.Min());
 
                         var result =
                         context.usp_GetProductVendors_LoadTest
@@ -50,6 +51,8 @@ namespace LoadTest_SQLServer
                     }
                 }
             }
+
+            Thread.Sleep(500);
         }
     }
 }
