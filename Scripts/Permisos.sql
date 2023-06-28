@@ -18,7 +18,7 @@ EXECUTE AS USER = 'Demologin'
 SELECT * FROM fn_my_permissions('Person', 'SCHEMA')
 REVERT
 
-USE [AdventureWorks]
+USE [AdventureWorks2019]
 GO
 SELECT * FROM fn_my_permissions('Person', 'SCHEMA')
 CREATE USER Demologin FROM LOGIN Demologin
@@ -150,3 +150,13 @@ EXECUTE AS USER = 'Demologin'
 SELECT * FROM fn_my_permissions
 ('[dbo].[usp_GetProductVendors_LoadTest]', 'OBJECT')
 REVERT
+--https://learn.microsoft.com/en-us/sql/t-sql/statements/grant-database-permissions-transact-sql?view=sql-server-ver16
+
+USE [AdventureWorks2019]
+GO
+
+CREATE USER Demologin FOR LOGIN Demologin
+GO
+
+GRANT ALTER TO Demologin
+GO
